@@ -243,6 +243,82 @@
     font-style: italic;
   }
 
+
+  /* MEDIA */
+  #media {
+    padding: 120px 5vw;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 60px;
+  }
+  .media-block {
+    background: var(--navy-card);
+    border: 1px solid rgba(157,255,0,0.12);
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .media-block:hover { border-color: rgba(157,255,0,0.4); }
+  .media-label {
+    padding: 16px 22px;
+    border-bottom: 1px solid rgba(157,255,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .media-label-dot {
+    width: 8px; height: 8px;
+    background: var(--neon);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--neon);
+    animation: scrollPulse 2s infinite;
+  }
+  .media-label span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--neon);
+    text-transform: uppercase;
+  }
+  .media-embed {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+  }
+  .media-embed iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .twitch-offline {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--navy-mid);
+  }
+  .twitch-offline-icon { font-size: 36px; opacity: 0.4; }
+  .twitch-offline p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  @media (max-width: 900px) {
+    .media-grid { grid-template-columns: 1fr; }
+  }
+
   /* ACHIEVEMENTS / coming soon */
   #achievements {
     padding: 120px 5vw;
@@ -333,6 +409,7 @@
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#roster">Roster</a></li>
+    <li><a href="#media">Media</a></li>
     <li><a href="#achievements">Achievements</a></li>
     <li><a href="#join">Join</a></li>
   </ul>
@@ -365,6 +442,7 @@
   <div class="hero-divider"></div>
   <p class="hero-region">EU Region &nbsp;·&nbsp; Rocket League</p>
   <div class="hero-scroll">
+    <span>Scroll</span>
     <div class="scroll-line"></div>
   </div>
 </section>
@@ -481,6 +559,44 @@
   </div>
 </section>
 
+<!-- MEDIA -->
+<div class="section-divider"></div>
+<section id="media">
+  <div class="reveal">
+    <div class="section-tag">Live & Latest</div>
+    <h2 class="section-title">Watch<br><em>CKS</em></h2>
+  </div>
+  <div class="media-grid">
+
+    <div class="media-block reveal">
+      <div class="media-label">
+        <div class="media-label-dot"></div>
+        <span>Live on Twitch</span>
+      </div>
+      <div class="media-embed">
+        <iframe
+          src="https://player.twitch.tv/?channel=team_cks&parent=localhost&parent=cksesports.netlify.app&parent=cks-esports.github.io&autoplay=false"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <div class="media-block reveal" style="transition-delay:0.15s">
+      <div class="media-label">
+        <div class="media-label-dot" style="background:#FF0000;box-shadow:0 0 8px #FF0000;"></div>
+        <span>Latest on YouTube</span>
+      </div>
+      <div class="media-embed">
+        <iframe
+          src="https://www.youtube.com/embed?listType=user_uploads&list=UCLcZ7yw7OJ1Ah0e9-Y9JfyQ&index=0&autoplay=0"
+          allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+  </div>
+</section>
+
 <!-- ACHIEVEMENTS -->
 <div class="section-divider"></div>
 <section id="achievements">
@@ -504,9 +620,9 @@
     <h2 class="join-title">Want To<br><em style="color:var(--neon)">Join?</em></h2>
     <p class="join-sub">Join the CKS Discord to stay updated, chat with the team, and apply.</p>
     <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
-      <a href="https://discord.gg/rHfCz53tDE" target="_blank" class="btn-primary">Discord</a>
-      <a href="https://www.youtube.com/channel/UCLcZ7yw7OJ1Ah0e9-Y9JfyQ" target="_blank" class="btn-primary">YouTube</a>
-      <a href="https://www.tiktok.com/@cks_esports16" target="_blank" class="btn-primary">TikTok</a>
+      <a href="https://discord.gg/rHfCz53tDE" target="_blank" class="btn-primary">Join Our Discord</a>
+      <a href="https://www.youtube.com/channel/UCLcZ7yw7OJ1Ah0e9-Y9JfyQ" target="_blank" class="btn-primary">Our YouTube</a>
+      <a href="https://www.tiktok.com/@cks_esports16" target="_blank" class="btn-primary">Our TikTok</a>
       <a href="https://www.instagram.com/cks.esports07/" target="_blank" class="btn-primary">Instagram</a>
       <a href="https://x.com/cks_esports" target="_blank" class="btn-primary">X / Twitter</a>
       <a href="https://www.twitch.tv/team_cks" target="_blank" class="btn-primary">Twitch</a>
