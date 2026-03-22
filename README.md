@@ -1,2 +1,144 @@
-# Team-CKS-eSports
-The official home of CKS Esports — a competitive Rocket League organisation built from the ground up by nine players with one shared goal. From the EU scene to the global stage, we compete, we grind, and we rise together. Every match is a step forward. Every result tells the story. Built to Dominate.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKS ESPORTS</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,900;1,900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: #9DFF00;
+    --neon-glow: rgba(157,255,0,0.35);
+    --navy: #080f1e;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--navy);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    flex-direction: column;
+    gap: 32px;
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+  }
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  .content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    text-align: center;
+    padding: 0 20px;
+  }
+  .logo {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: #0d1929;
+    border: 4px solid var(--neon);
+    box-shadow: 0 0 40px var(--neon-glow), inset 0 0 30px rgba(157,255,0,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 38px;
+    color: var(--neon);
+    text-shadow: 0 0 20px var(--neon-glow);
+    animation: pulse 2s ease-in-out infinite;
+  }
+  .title {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900;
+    font-style: italic;
+    font-size: 48px;
+    color: var(--neon);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    text-shadow: 0 0 30px var(--neon-glow);
+    line-height: 1;
+  }
+  .message {
+    font-size: 12px;
+    color: rgba(90,112,144,0.7);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .bar-wrap {
+    width: 220px;
+    height: 2px;
+    background: rgba(157,255,0,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+  .bar {
+    height: 100%;
+    background: var(--neon);
+    box-shadow: 0 0 10px var(--neon);
+    width: 0%;
+    animation: load 2.5s ease-in-out forwards;
+  }
+  .detecting {
+    font-size: 11px;
+    color: rgba(90,112,144,0.4);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .detecting span { color: var(--neon); animation: blink 1s infinite; }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 40px var(--neon-glow); }
+    50% { box-shadow: 0 0 70px rgba(157,255,0,0.5); }
+  }
+  @keyframes load { 0% { width: 0%; } 100% { width: 100%; } }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="content">
+  <div class="logo">CKS</div>
+  <div class="title">CKS ESPORTS</div>
+  <div class="message">This may take a few seconds</div>
+  <div class="bar-wrap"><div class="bar"></div></div>
+  <div class="detecting">Detecting device<span>...</span></div>
+</div>
+<script>
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const particles = Array.from({length: 80}, () => {
+    const p = {};
+    function reset() {
+      p.x = Math.random() * W; p.y = Math.random() * H;
+      p.size = Math.random() * 1.5 + 0.2;
+      p.sx = (Math.random() - 0.5) * 0.4; p.sy = (Math.random() - 0.5) * 0.4;
+      p.op = Math.random() * 0.4 + 0.05;
+      p.col = Math.random() > 0.7 ? '#9DFF00' : '#2a4a7a';
+    }
+    reset(); p.reset = reset; return p;
+  });
+  (function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.sx; p.y += p.sy;
+      if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) p.reset();
+      ctx.save(); ctx.globalAlpha = p.op; ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    });
+    requestAnimationFrame(draw);
+  })();
+
+  setTimeout(() => {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    window.location.href = isMobile ? 'mobile.html' : 'desktop.html';
+  }, 2500);
+</script>
+</body>
+</html>
