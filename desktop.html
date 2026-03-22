@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKS ESPORTS — Rocket League</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,900&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --neon: #9DFF00;
+    --neon-dim: #6ab800;
+    --neon-glow: rgba(157,255,0,0.35);
+    --navy: #080f1e;
+    --navy-mid: #0d1929;
+    --navy-light: #152238;
+    --navy-card: #111d30;
+    --white: #e8f0ff;
+    --muted: #5a7090;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--neon);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 12px var(--neon), 0 0 28px var(--neon-glow), 0 0 50px rgba(157,255,0,0.15);
+    transform: translate(-50%, -50%);
+  }
+
+  #bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+  section { position: relative; z-index: 1; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 5vw;
+    background: linear-gradient(180deg, rgba(8,15,30,0.98) 0%, transparent 100%);
+    border-bottom: 1px solid rgba(157,255,0,0.08);
+    backdrop-filter: blur(8px);
+  }
+  .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .nav-logo-badge {
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--navy-mid); border: 2.5px solid var(--neon);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 18px;
+    color: var(--neon); box-shadow: 0 0 16px var(--neon-glow); letter-spacing: 1px;
+  }
+  .nav-logo-text {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: 22px; color: var(--white); letter-spacing: 3px; text-transform: uppercase;
+  }
+  .nav-logo-text span { color: var(--neon); }
+  .nav-links { display: flex; gap: 36px; list-style: none; }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 15px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+    height: 1px; background: var(--neon); transform: scaleX(0); transition: transform 0.25s;
+  }
+  .nav-links a:hover { color: var(--neon); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  /* TICKER */
+  .ticker-wrap {
+    overflow: hidden; background: rgba(157,255,0,0.06);
+    border-top: 1px solid rgba(157,255,0,0.1); border-bottom: 1px solid rgba(157,255,0,0.1);
+    padding: 12px 0; position: relative; z-index: 2; margin-top: 70px;
+  }
+  .ticker { display: flex; animation: ticker 30s linear infinite; white-space: nowrap; }
+  .ticker-item {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--neon-dim); padding: 0 40px; display: flex; align-items: center; gap: 16px;
+  }
+  .ticker-dot { width: 4px; height: 4px; background: var(--neon); border-radius: 50%; box-shadow: 0 0 6px var(--neon); flex-shrink: 0; }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 120px 5vw 80px; position: relative; overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-family: 'Share Tech Mono', monospace; font-size: 13px;
+    color: var(--neon); letter-spacing: 5px; text-transform: uppercase;
+    margin-bottom: 28px; opacity: 0; animation: fadeUp 0.7s 0.3s forwards;
+  }
+  .hero-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(80px, 16vw, 200px); line-height: 0.9;
+    letter-spacing: -2px; text-transform: uppercase; color: var(--white);
+    opacity: 0; animation: fadeUp 0.7s 0.5s forwards;
+  }
+  .hero-title .neon-text {
+    color: var(--neon); font-style: italic; display: block;
+    text-shadow: 0 0 40px rgba(157,255,0,0.5), 0 0 80px rgba(157,255,0,0.2);
+  }
+  .hero-tagline {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: clamp(18px, 3vw, 28px); letter-spacing: 6px; text-transform: uppercase;
+    color: var(--muted); margin-top: 20px; opacity: 0; animation: fadeUp 0.7s 0.7s forwards;
+  }
+  .hero-divider {
+    width: 120px; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--neon), transparent);
+    margin: 40px auto; opacity: 0; animation: fadeUp 0.7s 0.9s forwards;
+    box-shadow: 0 0 12px var(--neon-glow);
+  }
+  .hero-region {
+    font-family: 'Share Tech Mono', monospace; font-size: 13px;
+    color: rgba(90,112,144,0.7); letter-spacing: 5px;
+    opacity: 0; animation: fadeUp 0.7s 1.1s forwards;
+  }
+  .hero-scroll {
+    position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0; animation: fadeUp 0.7s 1.4s forwards;
+  }
+  .hero-scroll span { font-family: 'Share Tech Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--muted); }
+  .scroll-line { width: 1px; height: 50px; background: linear-gradient(180deg, var(--neon), transparent); animation: scrollPulse 2s infinite; }
+
+  /* ABOUT */
+  #about {
+    padding: 120px 5vw; display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center; max-width: 1400px; margin: 0 auto;
+  }
+  .about-visual { display: flex; align-items: center; justify-content: center; }
+  .about-logo-ring {
+    width: 320px; height: 320px; border-radius: 50%;
+    background: var(--navy-mid); border: 4px solid var(--neon);
+    box-shadow: 0 0 60px var(--neon-glow), inset 0 0 60px rgba(157,255,0,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-style: italic; font-size: 110px; color: var(--neon);
+    text-shadow: 0 0 30px var(--neon-glow); position: relative;
+    animation: spinRing 20s linear infinite;
+  }
+  .about-logo-ring::before {
+    content: ''; position: absolute; inset: -12px; border-radius: 50%;
+    border: 1px solid rgba(157,255,0,0.2); animation: spinRing 15s linear infinite reverse;
+  }
+  .about-logo-ring::after {
+    content: ''; position: absolute; inset: -24px; border-radius: 50%;
+    border: 1px dashed rgba(157,255,0,0.1);
+  }
+  .section-tag {
+    font-family: 'Share Tech Mono', monospace; font-size: 12px;
+    color: var(--neon); letter-spacing: 5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+  }
+  .section-tag::before { content: ''; width: 30px; height: 1px; background: var(--neon); box-shadow: 0 0 6px var(--neon); }
+  .section-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: clamp(42px, 5vw, 72px); line-height: 0.95;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .section-title em { font-style: italic; color: var(--neon); }
+  .about-text { color: #8aa0bc; font-size: 17px; line-height: 1.8; margin-bottom: 16px; }
+  .about-badges { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+  .badge {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    padding: 8px 18px; border: 1px solid rgba(157,255,0,0.3);
+    color: var(--neon-dim); background: rgba(157,255,0,0.05);
+    clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+
+  /* ROSTER */
+  #roster {
+    padding: 120px 5vw;
+    background: linear-gradient(180deg, transparent 0%, rgba(13,25,41,0.6) 50%, transparent 100%);
+  }
+  .roster-header { text-align: center; margin-bottom: 60px; }
+  .roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 20px; max-width: 1400px; margin: 0 auto;
+  }
+  .player-card {
+    background: var(--navy-card); border: 1px solid rgba(157,255,0,0.12);
+    position: relative; overflow: hidden; transition: all 0.35s;
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+  }
+  .player-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(157,255,0,0.05) 0%, transparent 60%);
+    opacity: 0; transition: opacity 0.35s;
+  }
+  .player-card:hover { border-color: rgba(157,255,0,0.5); transform: translateY(-5px); box-shadow: 0 0 40px rgba(157,255,0,0.1); }
+  .player-card:hover::before { opacity: 1; }
+  .player-top {
+    padding: 28px 24px 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    border-bottom: 1px solid rgba(157,255,0,0.08);
+    position: relative; overflow: hidden;
+  }
+  .player-num-bg {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic;
+    font-size: 100px; color: rgba(157,255,0,0.04); position: absolute;
+    line-height: 1; bottom: -18px; right: -4px; pointer-events: none;
+  }
+  .player-name {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900;
+    font-size: 26px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--white); line-height: 1; position: relative; z-index: 1;
+  }
+  .player-name .lastname { color: var(--neon); }
+  .player-bottom { padding: 14px 24px 20px; }
+  .player-number-label {
+    font-family: 'Share Tech Mono', monospace; font-size: 10px;
+    letter-spacing: 3px; color: var(--muted); text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .player-desc {
+    border: 1px dashed rgba(157,255,0,0.15);
+    padding: 14px 16px;
+    background: rgba(157,255,0,0.02);
+  }
+  .player-desc p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    color: rgba(90,112,144,0.4);
+    letter-spacing: 2px;
+    line-height: 2.1;
+    font-style: italic;
+  }
+
+
+  /* MEDIA */
+  #media {
+    padding: 120px 5vw;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .media-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 60px;
+  }
+  .media-block {
+    background: var(--navy-card);
+    border: 1px solid rgba(157,255,0,0.12);
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s;
+  }
+  .media-block:hover { border-color: rgba(157,255,0,0.4); }
+  .media-label {
+    padding: 16px 22px;
+    border-bottom: 1px solid rgba(157,255,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .media-label-dot {
+    width: 8px; height: 8px;
+    background: var(--neon);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--neon);
+    animation: scrollPulse 2s infinite;
+  }
+  .media-label span {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--neon);
+    text-transform: uppercase;
+  }
+  .media-embed {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+  }
+  .media-embed iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .twitch-offline {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--navy-mid);
+  }
+  .twitch-offline-icon { font-size: 36px; opacity: 0.4; }
+  .twitch-offline p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  @media (max-width: 900px) {
+    .media-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ACHIEVEMENTS / coming soon */
+  #achievements {
+    padding: 120px 5vw;
+    background: radial-gradient(ellipse at center, rgba(157,255,0,0.04) 0%, transparent 70%);
+  }
+  .coming-soon-box {
+    max-width: 600px; margin: 50px auto 0; text-align: center;
+    border: 1px dashed rgba(157,255,0,0.2); padding: 60px 40px;
+    background: var(--navy-card); position: relative;
+  }
+  .coming-soon-box::before {
+    content: ''; position: absolute; top: 0; right: 0;
+    width: 0; height: 0;
+    border-left: 24px solid transparent; border-top: 24px solid rgba(157,255,0,0.2);
+  }
+  .cs-icon { font-size: 48px; margin-bottom: 20px; }
+  .cs-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic;
+    font-size: 42px; color: rgba(157,255,0,0.25); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .cs-sub {
+    font-family: 'Share Tech Mono', monospace; font-size: 12px;
+    color: rgba(90,112,144,0.5); letter-spacing: 3px; line-height: 2;
+  }
+
+  /* JOIN */
+  #join { padding: 140px 5vw; text-align: center; position: relative; }
+  .join-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at center, rgba(157,255,0,0.05) 0%, transparent 65%); }
+  .join-content { position: relative; z-index: 1; }
+  .join-title {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic;
+    font-size: clamp(60px, 10vw, 130px); line-height: 0.9; text-transform: uppercase; margin-bottom: 24px;
+  }
+  .join-sub {
+    font-family: 'Share Tech Mono', monospace; font-size: 12px;
+    color: rgba(90,112,144,0.5); letter-spacing: 3px; max-width: 480px;
+    margin: 0 auto 50px; line-height: 2.2;
+  }
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 16px;
+    letter-spacing: 4px; text-transform: uppercase; padding: 18px 56px;
+    background: var(--neon); color: var(--navy); border: none; cursor: none;
+    transition: all 0.3s; clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    box-shadow: 0 0 30px rgba(157,255,0,0.3);
+  }
+  .btn-primary:hover { background: #b4ff33; box-shadow: 0 0 50px rgba(157,255,0,0.5); transform: translateY(-3px); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(157,255,0,0.1); padding: 40px 5vw;
+    display: flex; align-items: center; justify-content: space-between; position: relative; z-index: 1;
+  }
+  .footer-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; font-size: 32px; color: var(--neon); letter-spacing: 3px; }
+  .footer-tagline { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 3px; }
+  .footer-copy { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: rgba(90,112,144,0.4); letter-spacing: 2px; }
+
+  .section-divider { max-width: 1200px; margin: 0 auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(157,255,0,0.15), transparent); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes scrollPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+  @keyframes spinRing { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    #about { grid-template-columns: 1fr; text-align: center; }
+    .section-tag { justify-content: center; }
+    .about-badges { justify-content: center; }
+    nav .nav-links { display: none; }
+    footer { flex-direction: column; gap: 16px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-badge">CKS</div>
+    <span class="nav-logo-text"><span>CKS</span> ESPORTS</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#roster">Roster</a></li>
+    <li><a href="#media">Media</a></li>
+    <li><a href="#achievements">Achievements</a></li>
+    <li><a href="#join">Join</a></li>
+  </ul>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="ticker-dot"></span>CKS Esports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Built to Dominate</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Rocket League</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>EU Region</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>9 Players Strong</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>CKS Esports</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Built to Dominate</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>Rocket League</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>EU Region</span>
+    <span class="ticker-item"><span class="ticker-dot"></span>9 Players Strong</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <p class="hero-eyebrow">// EU Rocket League Esports //</p>
+  <h1 class="hero-title">
+    <span class="neon-text">CKS</span>
+    ESPORTS
+  </h1>
+  <p class="hero-tagline">Built to Dominate</p>
+  <div class="hero-divider"></div>
+  <p class="hero-region">EU Region &nbsp;·&nbsp; Rocket League</p>
+  <div class="hero-scroll">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<div class="section-divider"></div>
+<section id="about">
+  <div class="about-visual reveal">
+    <div class="about-logo-ring">CKS</div>
+  </div>
+  <div class="about-content reveal">
+    <div class="section-tag">About Us</div>
+    <h2 class="section-title">Who Are<br><em>CKS?</em></h2>
+    <p class="about-text">CKS Esports is a Rocket League organisation based in the EU, built from the ground up by a group of friends who share one goal — to compete and win.</p>
+    <p class="about-text">Nine players. One team. Built to Dominate.</p>
+    <div class="about-badges">
+      <span class="badge">Rocket League</span>
+      <span class="badge">EU</span>
+      <span class="badge">9 Players</span>
+    </div>
+  </div>
+</section>
+
+<!-- ROSTER -->
+<div class="section-divider"></div>
+<section id="roster">
+  <div class="roster-header reveal">
+    <div class="section-tag" style="justify-content:center;">The Team</div>
+    <h2 class="section-title" style="text-align:center;">Our<br><em>Roster</em></h2>
+  </div>
+  <div class="roster-grid">
+
+    <div class="player-card reveal">
+      <div class="player-top">
+        <div class="player-num-bg">01</div>
+        <div class="player-name">Asher <span class="lastname">Malik</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 01 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.07s">
+      <div class="player-top">
+        <div class="player-num-bg">02</div>
+        <div class="player-name">Mohammed <span class="lastname">Amine</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 02 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.14s">
+      <div class="player-top">
+        <div class="player-num-bg">03</div>
+        <div class="player-name">Saif <span class="lastname">Mughal</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 03 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.21s">
+      <div class="player-top">
+        <div class="player-num-bg">04</div>
+        <div class="player-name">Aran <span class="lastname">Shakir</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 04 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.28s">
+      <div class="player-top">
+        <div class="player-num-bg">05</div>
+        <div class="player-name">Abid <span class="lastname">Khan</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 05 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.35s">
+      <div class="player-top">
+        <div class="player-num-bg">06</div>
+        <div class="player-name">Bilal <span class="lastname">[surname]</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 06 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.42s">
+      <div class="player-top">
+        <div class="player-num-bg">07</div>
+        <div class="player-name">Abdullah <span class="lastname">Raza</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 07 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.49s">
+      <div class="player-top">
+        <div class="player-num-bg">08</div>
+        <div class="player-name">Hamza <span class="lastname">Mohammed</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 08 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+    <div class="player-card reveal" style="transition-delay:0.56s">
+      <div class="player-top">
+        <div class="player-num-bg">09</div>
+        <div class="player-name">Humza <span class="lastname">Abbas</span></div>
+      </div>
+      <div class="player-bottom"><div class="player-number-label"># 09 &nbsp;·&nbsp; CKS</div>
+      <div class="player-desc"><p>[ Add player description here ]</p></div></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MEDIA -->
+<div class="section-divider"></div>
+<section id="media">
+  <div class="reveal">
+    <div class="section-tag">Live & Latest</div>
+    <h2 class="section-title">Watch<br><em>CKS</em></h2>
+  </div>
+  <div class="media-grid">
+
+    <div class="media-block reveal">
+      <div class="media-label">
+        <div class="media-label-dot"></div>
+        <span>Live on Twitch</span>
+      </div>
+      <div class="media-embed" style="background:var(--navy-mid);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding-bottom:0;height:220px;">
+        <div style="font-size:36px;opacity:0.3;">📺</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;">Streams Coming Soon</div>
+        <a href="https://www.twitch.tv/team_cks" target="_blank" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--neon);text-decoration:none;border:1px solid rgba(157,255,0,0.3);padding:8px 20px;">Follow on Twitch ↗</a>
+      </div>
+    </div>
+
+    <div class="media-block reveal" style="transition-delay:0.15s">
+      <div class="media-label">
+        <div class="media-label-dot" style="background:#FF0000;box-shadow:0 0 8px #FF0000;"></div>
+        <span>Latest on YouTube</span>
+      </div>
+      <div class="media-embed" style="background:var(--navy-mid);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:14px;padding-bottom:0;height:220px;">
+        <div style="font-size:36px;opacity:0.3;">🎬</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;">Videos Coming Soon</div>
+        <a href="https://www.youtube.com/channel/UCLcZ7yw7OJ1Ah0e9-Y9JfyQ" target="_blank" style="font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--neon);text-decoration:none;border:1px solid rgba(157,255,0,0.3);padding:8px 20px;">Subscribe on YouTube ↗</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ACHIEVEMENTS -->
+<div class="section-divider"></div>
+<section id="achievements">
+  <div class="reveal" style="text-align:center;">
+    <div class="section-tag" style="justify-content:center;">Honours</div>
+    <h2 class="section-title">Our<br><em>Achievements</em></h2>
+  </div>
+  <div class="coming-soon-box reveal">
+    <div class="cs-icon">🏆</div>
+    <div class="cs-title">Coming Soon</div>
+    <div class="cs-sub">We're just getting started.<br>Check back when the trophies roll in.</div>
+  </div>
+</section>
+
+<!-- JOIN -->
+<div class="section-divider"></div>
+<section id="join">
+  <div class="join-bg"></div>
+  <div class="join-content reveal">
+    <div class="section-tag" style="justify-content:center;">Get Involved</div>
+    <h2 class="join-title">Want To<br><em style="color:var(--neon)">Join?</em></h2>
+    <p class="join-sub">Join the CKS Discord to stay updated, chat with the team, and apply.</p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+      <a href="https://discord.gg/rHfCz53tDE" target="_blank" class="btn-primary">Join Our Discord</a>
+      <a href="https://www.youtube.com/channel/UCLcZ7yw7OJ1Ah0e9-Y9JfyQ" target="_blank" class="btn-primary">Our YouTube</a>
+      <a href="https://www.tiktok.com/@cks_esports16" target="_blank" class="btn-primary">Our TikTok</a>
+      <a href="https://www.instagram.com/cks.esports07/" target="_blank" class="btn-primary">Instagram</a>
+      <a href="https://x.com/cks_esports" target="_blank" class="btn-primary">X / Twitter</a>
+      <a href="https://www.twitch.tv/team_cks" target="_blank" class="btn-primary">Twitch</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">CKS</div>
+  <div class="footer-tagline">Built to Dominate</div>
+  <div style="display:flex;gap:24px;">
+    <a href="https://discord.gg/rHfCz53tDE" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">Discord ↗</a>
+    <a href="https://www.youtube.com/channel/UCLcZ7yw7OJ1Ah0e9-Y9JfyQ" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">YouTube ↗</a>
+    <a href="https://www.tiktok.com/@cks_esports16" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">TikTok ↗</a>
+    <a href="https://www.instagram.com/cks.esports07/" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">Instagram ↗</a>
+    <a href="https://x.com/cks_esports" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">X / Twitter ↗</a>
+    <a href="https://www.twitch.tv/team_cks" target="_blank" style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--neon);text-decoration:none;">Twitch ↗</a>
+  </div>
+  <div class="footer-copy">© 2026 CKS ESPORTS &nbsp;·&nbsp; EU</div>
+</footer>
+
+<script>
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const target = document.querySelector(link.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // Cursor — dot only, no ring
+  const cursor = document.getElementById('cursor');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+
+  // Particle canvas
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  const particles = Array.from({length: 160}, () => {
+    const p = {};
+    function reset() {
+      p.x = Math.random() * W; p.y = Math.random() * H;
+      p.size = Math.random() * 1.5 + 0.2;
+      p.sx = (Math.random() - 0.5) * 0.4; p.sy = (Math.random() - 0.5) * 0.4;
+      p.op = Math.random() * 0.4 + 0.05;
+      p.col = Math.random() > 0.7 ? '#9DFF00' : '#2a4a7a';
+    }
+    reset(); p.reset = reset; return p;
+  });
+  (function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.sx; p.y += p.sy;
+      if (p.x < 0 || p.x > W || p.y < 0 || p.y > H) p.reset();
+      ctx.save(); ctx.globalAlpha = p.op; ctx.fillStyle = p.col;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    });
+    particles.forEach((a, i) => particles.slice(i + 1).forEach(b => {
+      const d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (d < 120) {
+        ctx.save(); ctx.globalAlpha = (1 - d / 120) * 0.06;
+        ctx.strokeStyle = '#9DFF00'; ctx.lineWidth = 0.5;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); ctx.restore();
+      }
+    }));
+    requestAnimationFrame(draw);
+  })();
+
+  // Scroll reveal
+  const io = new IntersectionObserver(entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }), { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+</script>
+</body>
+</html>
