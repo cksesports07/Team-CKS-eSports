@@ -1,0 +1,3447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CKS ESPORTS — Rocket League Organization</title>
+<meta name="description" content="CKS Esports — A rising Rocket League esports organization built for competitive excellence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0a;
+  --bg2: #0d0d0f;
+  --bg3: #111115;
+  --accent: #00F0FF;
+  --accent2: #0080ff;
+  --accent3: #7000ff;
+  --white: #ffffff;
+  --gray: #8a8a9a;
+  --gray2: #3a3a4a;
+  --glass: rgba(255,255,255,0.04);
+  --glass-border: rgba(0,240,255,0.15);
+  --glow: 0 0 20px rgba(0,240,255,0.4), 0 0 60px rgba(0,240,255,0.1);
+  --glow2: 0 0 40px rgba(0,240,255,0.6);
+  --font-display: 'Orbitron', monospace;
+  --font-body: 'Rajdhani', sans-serif;
+  --font-clean: 'Inter', sans-serif;
+  --nav-h: 72px;
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 18px;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ═══════════════════════════════ CUSTOM CURSOR ═══════════════════════════════ */
+#cursor {
+  width: 12px; height: 12px;
+  background: var(--accent);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: screen;
+}
+#cursor-trail {
+  width: 36px; height: 36px;
+  border: 1px solid rgba(0,240,255,0.5);
+  border-radius: 50%;
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.25s ease, width 0.3s, height 0.3s, opacity 0.3s;
+}
+body:hover #cursor { opacity: 1; }
+.cursor-expand { width: 48px !important; height: 48px !important; opacity: 0.5 !important; }
+
+/* ═══════════════════════════════ SCROLLBAR ═══════════════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+/* ═══════════════════════════════ PARTICLES CANVAS ═══════════════════════════════ */
+#particles-canvas {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 0;
+  opacity: 0.4;
+}
+
+/* ═══════════════════════════════ FLOATING NAV ═══════════════════════════════ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  display: flex; align-items: center;
+  padding: 0 48px;
+  transition: all 0.4s ease;
+}
+nav.scrolled {
+  background: rgba(10,10,10,0.92);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 4px 40px rgba(0,240,255,0.05);
+}
+.nav-logo {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.4rem;
+  letter-spacing: 0.2em;
+  background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 4s linear infinite;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.nav-links {
+  display: flex; align-items: center;
+  gap: 6px; list-style: none;
+  margin-left: auto;
+}
+.nav-links a {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray);
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  position: relative;
+  transition: color 0.3s;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: 4px; left: 50%; right: 50%;
+  height: 1px; background: var(--accent);
+  transition: left 0.3s, right 0.3s;
+}
+.nav-links a:hover { color: var(--accent); }
+.nav-links a:hover::after { left: 14px; right: 14px; }
+.nav-cta {
+  margin-left: 20px;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 10px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: none; cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(0,240,255,0.3);
+  position: relative; overflow: hidden;
+}
+.nav-cta::before {
+  content: '';
+  position: absolute; top: 50%; left: 50%;
+  width: 0; height: 0;
+  background: rgba(255,255,255,0.3);
+  border-radius: 50%;
+  transform: translate(-50%,-50%);
+  transition: width 0.4s, height 0.4s;
+}
+.nav-cta:hover::before { width: 200px; height: 200px; }
+.nav-cta:hover { box-shadow: var(--glow2); transform: translateY(-1px); }
+
+.hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+.hamburger span { display: block; width: 24px; height: 2px; background: var(--accent); transition: all 0.3s; }
+
+/* ═══════════════════════════════ SECTIONS BASE ═══════════════════════════════ */
+section { position: relative; z-index: 1; }
+
+.section-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 16px;
+  margin-bottom: 24px;
+}
+.section-label::before {
+  content: '';
+  display: block; width: 40px; height: 1px;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), var(--accent2), #fff, var(--accent));
+  background-size: 300% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 6s linear infinite;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(0.9); transition: opacity 0.8s ease, transform 0.8s ease; }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+.glass-panel {
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+}
+
+/* Ripple */
+.ripple-btn {
+  position: relative; overflow: hidden;
+}
+.ripple-btn .ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(0,240,255,0.3);
+  transform: scale(0);
+  animation: rippleAnim 0.6s linear;
+  pointer-events: none;
+}
+@keyframes rippleAnim {
+  to { transform: scale(4); opacity: 0; }
+}
+
+/* ═══════════════════════════════ HERO ═══════════════════════════════ */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: calc(var(--nav-h) + 40px) 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-bg-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  pointer-events: none;
+}
+.hero-bg-vignette {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 30%, var(--bg) 80%);
+  pointer-events: none;
+}
+.hero-bg-glow {
+  position: absolute;
+  width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(0,240,255,0.08) 0%, transparent 70%);
+  top: -200px; right: -200px;
+  animation: heroGlowPulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+.hero-bg-glow2 {
+  position: absolute;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(112,0,255,0.06) 0%, transparent 70%);
+  bottom: -100px; left: -100px;
+  animation: heroGlowPulse 8s ease-in-out infinite reverse;
+  pointer-events: none;
+}
+@keyframes heroGlowPulse {
+  0%,100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 900px; }
+
+.hero-status {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(0,240,255,0.08);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 100px;
+  padding: 8px 20px;
+  margin-bottom: 40px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  animation: fadeInDown 0.8s ease both;
+}
+.status-dot {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent);
+  animation: statusPulse 2s infinite;
+}
+@keyframes statusPulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hero-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 20px;
+  animation: fadeInUp 0.8s 0.2s ease both;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(3.5rem, 10vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+  animation: fadeInUp 0.8s 0.3s ease both;
+}
+.hero-title-sub {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+  font-weight: 400;
+  color: var(--gray);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.8s 0.4s ease both;
+}
+
+.hero-desc {
+  font-family: var(--font-clean);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--gray);
+  max-width: 560px;
+  margin-bottom: 56px;
+  animation: fadeInUp 0.8s 0.5s ease both;
+}
+
+.hero-ctas {
+  display: flex; gap: 16px; flex-wrap: wrap;
+  animation: fadeInUp 0.8s 0.6s ease both;
+}
+
+.btn-primary {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 16px 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  border: none; cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(0,240,255,0.35);
+  position: relative; overflow: hidden;
+}
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 60px rgba(0,240,255,0.6), 0 8px 32px rgba(0,0,0,0.5);
+}
+
+.btn-secondary {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: transparent;
+  padding: 15px 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px;
+  border: 1px solid rgba(0,240,255,0.4);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.btn-secondary:hover {
+  background: rgba(0,240,255,0.07);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-3px);
+}
+
+.hero-stats-row {
+  position: absolute; bottom: 80px; right: 48px;
+  display: flex; gap: 40px;
+  animation: fadeIn 1s 1s ease both;
+}
+.hero-stat {
+  text-align: right;
+}
+.hero-stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--accent);
+  line-height: 1;
+  text-shadow: 0 0 20px rgba(0,240,255,0.5);
+}
+.hero-stat-label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-top: 4px;
+}
+.hero-scroll-indicator {
+  position: absolute; bottom: 30px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  animation: fadeIn 1s 1.5s ease both;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-text {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gray);
+  writing-mode: vertical-rl;
+}
+
+/* SVG Logo animated */
+.hero-logo-svg {
+  position: absolute; right: 80px; top: 50%;
+  transform: translateY(-50%);
+  width: 320px; height: 320px;
+  opacity: 0.12;
+  pointer-events: none;
+}
+.hero-logo-svg path {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawSVG 3s ease forwards 0.5s;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+@keyframes drawSVG {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ═══════════════════════════════ TICKER ═══════════════════════════════ */
+.ticker-wrap {
+  background: rgba(0,240,255,0.08);
+  border-top: 1px solid rgba(0,240,255,0.1);
+  border-bottom: 1px solid rgba(0,240,255,0.1);
+  padding: 12px 0;
+  overflow: hidden;
+  position: relative; z-index: 2;
+}
+.ticker-track {
+  display: flex; gap: 80px;
+  animation: tickerScroll 30s linear infinite;
+  white-space: nowrap;
+}
+.ticker-item {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 20px;
+  flex-shrink: 0;
+}
+.ticker-sep { color: rgba(0,240,255,0.3); }
+@keyframes tickerScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ═══════════════════════════════ ABOUT ═══════════════════════════════ */
+#about {
+  padding: 140px 48px;
+  position: relative;
+}
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.about-visual {
+  position: relative;
+}
+.about-hex-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.about-hex {
+  aspect-ratio: 1;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  transition: all 0.4s;
+  cursor: default;
+}
+.about-hex:hover {
+  background: rgba(0,240,255,0.08);
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-4px) scale(1.02);
+}
+.about-hex-icon {
+  font-size: 2rem;
+}
+.about-hex-label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: center;
+}
+.about-hex-val {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--white);
+}
+.about-content {}
+.about-body {
+  font-family: var(--font-clean);
+  font-size: 0.95rem;
+  line-height: 1.9;
+  color: var(--gray);
+  margin-bottom: 32px;
+}
+.about-pillars {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 40px;
+}
+.pillar {
+  display: flex; align-items: flex-start; gap: 20px;
+  padding: 20px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  transition: all 0.3s;
+}
+.pillar:hover {
+  border-color: var(--accent);
+  background: rgba(0,240,255,0.05);
+  transform: translateX(8px);
+}
+.pillar-num {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: rgba(0,240,255,0.2);
+  line-height: 1;
+  flex-shrink: 0;
+  min-width: 48px;
+}
+.pillar-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.pillar-desc {
+  font-family: var(--font-clean);
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.6;
+}
+
+/* Decorative line */
+.section-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
+  margin: 0;
+}
+
+/* ═══════════════════════════════ ROSTER ═══════════════════════════════ */
+#roster {
+  padding: 140px 48px;
+  background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
+}
+.roster-header {
+  text-align: center;
+  margin-bottom: 80px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.player-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  position: relative;
+}
+.player-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow), 0 24px 80px rgba(0,0,0,0.6);
+  transform: translateY(-12px) scale(1.02);
+}
+.player-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(0,240,255,0.06) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s;
+  border-radius: 16px;
+}
+.player-card:hover::before { opacity: 1; }
+.player-card-top {
+  background: linear-gradient(180deg, rgba(0,240,255,0.12) 0%, transparent 100%);
+  padding: 40px 24px 24px;
+  text-align: center;
+  position: relative;
+}
+.player-number {
+  position: absolute; top: 16px; left: 16px;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: rgba(0,240,255,0.4);
+}
+.player-avatar {
+  width: 100px; height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
+  border: 2px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem;
+  position: relative;
+  transition: all 0.4s;
+}
+.player-card:hover .player-avatar {
+  border-color: var(--accent);
+  box-shadow: 0 0 30px rgba(0,240,255,0.4);
+  transform: scale(1.08);
+}
+.player-avatar-empty {
+  background: rgba(255,255,255,0.02);
+  border-style: dashed;
+}
+.player-tag {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.player-card-body {
+  padding: 20px 24px 28px;
+  border-top: 1px solid var(--glass-border);
+}
+.player-role-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(0,240,255,0.1);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 100px;
+  padding: 4px 14px;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.player-role-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+.player-social {
+  display: flex; gap: 10px;
+  margin-top: 20px;
+}
+.player-social a {
+  width: 34px; height: 34px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray);
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.player-social a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0,240,255,0.3);
+}
+.player-empty-slot {
+  opacity: 0.4;
+}
+.slot-coming-soon {
+  display: flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.slot-pulse { width: 6px; height: 6px; background: var(--gray); border-radius: 50%; animation: statusPulse 2s infinite; }
+
+/* ═══════════════════════════════ NEWS ═══════════════════════════════ */
+#news {
+  padding: 140px 48px;
+}
+.news-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  max-width: 1300px; margin: 0 auto 60px;
+}
+.news-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 24px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.news-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s;
+  cursor: pointer;
+}
+.news-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-6px);
+}
+.news-card-img {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(112,0,255,0.1));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.news-card-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,10,10,0.8), transparent);
+}
+.news-card.featured .news-card-img { aspect-ratio: 16/7; font-size: 5rem; }
+.news-card-body { padding: 24px; }
+.news-category {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+.news-card-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--white);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+.news-card.featured .news-card-title { font-size: 1.4rem; }
+.news-date {
+  font-family: var(--font-clean);
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+.news-placeholder {
+  font-family: var(--font-clean);
+  font-size: 0.85rem;
+  color: var(--gray);
+  font-style: italic;
+  line-height: 1.7;
+}
+
+/* ═══════════════════════════════ SCHEDULE ═══════════════════════════════ */
+#schedule {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.schedule-container {
+  max-width: 1300px; margin: 0 auto;
+}
+.schedule-tabs {
+  display: flex; gap: 4px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 8px;
+  padding: 4px;
+  margin-bottom: 40px;
+  width: fit-content;
+}
+.tab-btn {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  background: none; border: none; cursor: pointer;
+  color: var(--gray);
+  padding: 10px 24px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+.tab-btn.active {
+  background: var(--accent);
+  color: var(--bg);
+  box-shadow: 0 0 20px rgba(0,240,255,0.4);
+}
+.tab-btn:hover:not(.active) { color: var(--accent); background: rgba(0,240,255,0.08); }
+
+.match-list { display: flex; flex-direction: column; gap: 12px; }
+.match-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 24px 32px;
+  display: flex; align-items: center; gap: 32px;
+  transition: all 0.3s;
+}
+.match-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+  transform: translateX(8px);
+}
+.match-date-col {
+  min-width: 120px;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+.match-date-col .match-time { color: var(--gray); font-weight: 400; margin-top: 4px; }
+.match-event {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+}
+.match-event span { display: block; color: var(--gray); font-weight: 400; margin-top: 4px; font-size: 0.65rem; }
+.match-vs {
+  display: flex; align-items: center; gap: 24px;
+}
+.match-team {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.match-team.cks { color: var(--accent); }
+.match-team.opp { color: var(--gray); }
+.match-vs-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--gray2);
+  letter-spacing: 0.2em;
+}
+.match-status {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 100px;
+  border: 1px solid;
+}
+.status-upcoming { color: var(--accent); border-color: rgba(0,240,255,0.3); background: rgba(0,240,255,0.06); }
+.status-tbd { color: var(--gray); border-color: var(--gray2); background: transparent; }
+
+.schedule-empty {
+  padding: 80px 32px;
+  text-align: center;
+  font-family: var(--font-clean);
+  font-size: 0.95rem;
+  color: var(--gray);
+  font-style: italic;
+}
+.schedule-empty-icon { font-size: 3rem; margin-bottom: 20px; display: block; opacity: 0.4; }
+
+/* ═══════════════════════════════ LIVE / STREAMS ═══════════════════════════════ */
+#live {
+  padding: 140px 48px;
+}
+.streams-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  max-width: 1300px; margin: 0 auto;
+  align-items: start;
+}
+.stream-main {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.stream-preview {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #0a0a14, #0d0d20);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.stream-offline-msg {
+  text-align: center;
+  z-index: 2;
+}
+.stream-offline-icon { font-size: 4rem; margin-bottom: 16px; display: block; opacity: 0.3; }
+.stream-offline-text {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.stream-scan-line {
+  position: absolute; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,0.3), transparent);
+  animation: scanLine 4s linear infinite;
+}
+@keyframes scanLine {
+  0% { top: 0; opacity: 1; }
+  100% { top: 100%; opacity: 0; }
+}
+.stream-footer {
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.stream-channel {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--white);
+}
+.stream-channel span { display: block; font-size: 0.6rem; color: var(--gray); margin-top: 2px; font-weight: 400; }
+.stream-channels {
+  display: flex; flex-direction: column; gap: 16px;
+}
+.stream-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex; align-items: center; gap: 20px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+.stream-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+}
+.stream-avatar {
+  width: 48px; height: 48px;
+  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  border: 1px solid var(--glass-border);
+}
+.stream-info { flex: 1; }
+.stream-name {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+.stream-platform {
+  font-family: var(--font-clean);
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+.stream-badge-offline {
+  font-family: var(--font-display);
+  font-size: 0.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+  padding: 4px 10px;
+  border-radius: 100px;
+  border: 1px solid var(--gray2);
+}
+
+/* ═══════════════════════════════ STATS ═══════════════════════════════ */
+#stats {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.stats-container {
+  max-width: 1300px; margin: 0 auto;
+}
+.stats-coming-soon {
+  text-align: center;
+  padding: 80px 0;
+}
+.stats-icon { font-size: 5rem; display: block; margin-bottom: 24px; opacity: 0.3; }
+.stats-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--gray);
+  margin-bottom: 12px;
+  letter-spacing: 0.2em;
+}
+.stats-desc {
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: rgba(138,138,154,0.6);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  line-height: 1.7;
+  font-style: italic;
+}
+.stat-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+.stat-preview-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 28px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.stat-preview-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+}
+.stat-preview-card::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.stat-preview-card:hover::before { opacity: 1; }
+.stat-preview-label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.stat-preview-val {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--gray2);
+}
+.stat-preview-val.tracked {
+  color: var(--accent);
+  text-shadow: 0 0 20px rgba(0,240,255,0.4);
+}
+.stat-bar {
+  height: 3px;
+  background: var(--gray2);
+  border-radius: 2px;
+  margin-top: 16px;
+  overflow: hidden;
+}
+.stat-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  border-radius: 2px;
+  transition: width 1.5s ease 0.5s;
+  box-shadow: 0 0 8px var(--accent);
+}
+
+/* ═══════════════════════════════ HIGHLIGHTS / MEDIA ═══════════════════════════════ */
+#media {
+  padding: 140px 48px;
+}
+.media-filter {
+  display: flex; gap: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 100px;
+  padding: 8px 20px;
+  color: var(--gray);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.filter-btn:hover, .filter-btn.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(0,240,255,0.08);
+  box-shadow: 0 0 12px rgba(0,240,255,0.2);
+}
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1300px; margin: 0 auto;
+}
+.media-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.4s;
+  cursor: pointer;
+}
+.media-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: scale(1.02);
+}
+.media-thumb {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, rgba(0,240,255,0.08), rgba(112,0,255,0.08));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 3rem;
+  position: relative;
+  overflow: hidden;
+}
+.media-thumb::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0);
+  transition: background 0.3s;
+}
+.media-card:hover .media-thumb::after { background: rgba(0,240,255,0.08); }
+.media-play {
+  position: absolute;
+  width: 52px; height: 52px;
+  background: var(--accent);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--bg);
+  font-size: 1.2rem;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s;
+  z-index: 2;
+}
+.media-card:hover .media-play { opacity: 1; transform: scale(1); }
+.media-label {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  position: absolute; bottom: 12px; left: 12px; z-index: 2;
+}
+.media-body { padding: 16px 20px; }
+.media-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+.media-meta { font-family: var(--font-clean); font-size: 0.75rem; color: var(--gray); }
+.media-placeholder-msg {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 60px;
+  color: var(--gray);
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════ MERCH ═══════════════════════════════ */
+#merch {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.merch-coming {
+  max-width: 1300px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+}
+.merch-info {}
+.merch-visual {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.merch-mockup {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 3/4;
+  background: linear-gradient(135deg, rgba(0,240,255,0.06), rgba(112,0,255,0.06));
+  border: 1px dashed rgba(0,240,255,0.2);
+  border-radius: 16px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 24px;
+  font-family: var(--font-display);
+}
+.merch-mockup-icon { font-size: 5rem; opacity: 0.3; }
+.merch-mockup-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.notify-form {
+  display: flex; gap: 12px; margin-top: 36px;
+  flex-wrap: wrap;
+}
+.notify-input {
+  flex: 1; min-width: 200px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 14px 20px;
+  color: var(--white);
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.notify-input:focus { border-color: var(--accent); box-shadow: 0 0 12px rgba(0,240,255,0.15); }
+.notify-input::placeholder { color: var(--gray); }
+
+/* ═══════════════════════════════ SPONSORS ═══════════════════════════════ */
+#sponsors {
+  padding: 140px 48px;
+}
+.sponsors-container { max-width: 1300px; margin: 0 auto; }
+.sponsor-tiers { display: flex; flex-direction: column; gap: 60px; margin-top: 60px; }
+.sponsor-tier-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 16px;
+}
+.sponsor-tier-label::after {
+  content: '';
+  flex: 1; height: 1px;
+  background: var(--glass-border);
+}
+.sponsor-slots {
+  display: flex; flex-wrap: wrap; gap: 16px;
+}
+.sponsor-slot {
+  background: var(--glass);
+  border: 1px dashed rgba(0,240,255,0.15);
+  border-radius: 12px;
+  padding: 28px 48px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.4s;
+  cursor: pointer;
+  min-width: 180px;
+}
+.sponsor-slot:hover {
+  border-color: var(--accent);
+  background: rgba(0,240,255,0.05);
+  box-shadow: var(--glow);
+}
+.sponsor-slot-text {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gray2);
+}
+.sponsor-slot:hover .sponsor-slot-text { color: var(--accent); }
+.sponsor-pitch {
+  margin-top: 60px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 48px;
+  text-align: center;
+}
+.sponsor-pitch-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--white);
+  margin-bottom: 16px;
+  letter-spacing: 0.05em;
+}
+.sponsor-pitch-desc {
+  font-family: var(--font-clean);
+  font-size: 0.95rem;
+  color: var(--gray);
+  max-width: 600px;
+  margin: 0 auto 32px;
+  line-height: 1.8;
+}
+
+/* ═══════════════════════════════ RECRUITMENT ═══════════════════════════════ */
+#recruitment {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.recruitment-container {
+  max-width: 1300px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px;
+  align-items: start;
+}
+.recruitment-info {}
+.recruitment-reqs {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 36px;
+}
+.req-item {
+  display: flex; align-items: flex-start; gap: 16px;
+  padding: 16px 20px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+}
+.req-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
+.req-text {
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.6;
+}
+.req-text strong { color: var(--white); font-family: var(--font-display); letter-spacing: 0.05em; }
+
+.tryout-form {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 40px;
+}
+.tryout-form-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--white);
+  margin-bottom: 32px;
+}
+.form-group { margin-bottom: 20px; }
+.form-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: block;
+  margin-bottom: 8px;
+}
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  color: var(--white);
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s;
+  -webkit-appearance: none;
+}
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--accent);
+  background: rgba(0,240,255,0.04);
+  box-shadow: 0 0 16px rgba(0,240,255,0.1);
+}
+.form-input::placeholder, .form-textarea::placeholder { color: var(--gray2); }
+.form-select option { background: var(--bg3); }
+.form-textarea { height: 100px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-submit {
+  width: 100%;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 0 30px rgba(0,240,255,0.3);
+}
+.form-submit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 60px rgba(0,240,255,0.5);
+}
+
+/* ═══════════════════════════════ COMMUNITY ═══════════════════════════════ */
+#community {
+  padding: 140px 48px;
+}
+.community-container { max-width: 1300px; margin: 0 auto; }
+.community-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+.community-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  text-align: center;
+  transition: all 0.4s;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.community-card::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; right: 50%;
+  height: 2px;
+  background: var(--accent);
+  box-shadow: 0 0 16px var(--accent);
+  transition: left 0.4s, right 0.4s;
+}
+.community-card:hover::before { left: 0; right: 0; }
+.community-card:hover {
+  border-color: rgba(0,240,255,0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+.community-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+.community-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.community-desc {
+  font-family: var(--font-clean);
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.community-cta {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-decoration: none;
+  display: inline-flex; align-items: center; gap: 8px;
+  transition: gap 0.3s;
+}
+.community-cta:hover { gap: 14px; }
+
+/* ═══════════════════════════════ ACHIEVEMENTS ═══════════════════════════════ */
+#achievements {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.achievements-container { max-width: 1300px; margin: 0 auto; }
+.ach-empty {
+  margin-top: 60px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.ach-empty::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(0,240,255,0.01) 10px,
+      rgba(0,240,255,0.01) 11px
+    );
+}
+.ach-trophy { font-size: 6rem; display: block; margin-bottom: 24px; opacity: 0.15; }
+.ach-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--gray);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+.ach-desc {
+  font-family: var(--font-clean);
+  font-size: 0.95rem;
+  color: rgba(138,138,154,0.5);
+  max-width: 500px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+  font-style: italic;
+}
+.ach-timeline {
+  display: flex; flex-direction: column; gap: 0;
+  max-width: 600px; margin: 80px auto 0;
+  position: relative;
+}
+.ach-timeline::before {
+  content: '';
+  position: absolute; left: 20px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, var(--accent), transparent);
+}
+.ach-item {
+  display: flex; gap: 40px;
+  padding: 24px 0 24px 56px;
+  position: relative;
+  opacity: 0.4;
+}
+.ach-dot {
+  position: absolute; left: 14px; top: 50%;
+  transform: translateY(-50%);
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--gray2);
+  background: var(--bg);
+}
+.ach-item-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--gray2);
+  letter-spacing: 0.1em;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════ CONTACT / FAQ ═══════════════════════════════ */
+#contact {
+  padding: 140px 48px;
+}
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  max-width: 1300px; margin: 0 auto;
+  align-items: start;
+}
+.contact-info {}
+.contact-links {
+  display: flex; flex-direction: column; gap: 16px;
+  margin-top: 40px;
+}
+.contact-link-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  padding: 20px 24px;
+  display: flex; align-items: center; gap: 20px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.contact-link-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+  transform: translateX(8px);
+}
+.contact-link-icon { font-size: 1.5rem; flex-shrink: 0; }
+.contact-link-info {}
+.contact-link-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+.contact-link-val {
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.faq-list { display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+.faq-item.open { border-color: rgba(0,240,255,0.3); }
+.faq-question {
+  padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.03em;
+  transition: color 0.3s;
+}
+.faq-question:hover { color: var(--accent); }
+.faq-arrow {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: rgba(0,240,255,0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  color: var(--accent);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-answer {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.4s;
+}
+.faq-item.open .faq-answer { max-height: 300px; }
+.faq-answer-inner {
+  padding: 0 24px 20px;
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.8;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 16px;
+}
+
+/* ═══════════════════════════════ AR / VR / EXPERIMENTAL ═══════════════════════════════ */
+#experimental {
+  padding: 140px 48px;
+  background: var(--bg2);
+}
+.exp-container { max-width: 1300px; margin: 0 auto; }
+.exp-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+.exp-card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 40px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s;
+}
+.exp-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--glow);
+  transform: translateY(-8px);
+}
+.exp-card::after {
+  content: 'COMING SOON';
+  position: absolute; top: 16px; right: 16px;
+  font-family: var(--font-display);
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--gray2);
+  padding: 4px 10px;
+  border: 1px solid var(--gray2);
+  border-radius: 100px;
+}
+.exp-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+.exp-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.exp-desc {
+  font-family: var(--font-clean);
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.7;
+}
+.exp-glow {
+  position: absolute; bottom: -40px; right: -40px;
+  width: 150px; height: 150px;
+  background: radial-gradient(circle, rgba(0,240,255,0.1), transparent);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════ FOOTER ═══════════════════════════════ */
+footer {
+  padding: 80px 48px 40px;
+  border-top: 1px solid var(--glass-border);
+  position: relative; z-index: 1;
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 60px;
+  max-width: 1300px; margin: 0 auto;
+  margin-bottom: 60px;
+}
+.footer-brand-desc {
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: var(--gray);
+  line-height: 1.8;
+  margin: 20px 0 32px;
+}
+.footer-social {
+  display: flex; gap: 10px;
+}
+.footer-social a {
+  width: 40px; height: 40px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray);
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.footer-social a:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 16px rgba(0,240,255,0.3);
+  transform: translateY(-3px);
+}
+.footer-col-title {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+.footer-links {
+  display: flex; flex-direction: column; gap: 12px; list-style: none;
+}
+.footer-links a {
+  font-family: var(--font-clean);
+  font-size: 0.9rem;
+  color: var(--gray);
+  text-decoration: none;
+  transition: color 0.3s;
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.footer-links a::before { content: '—'; color: var(--glass-border); font-size: 0.7rem; }
+.footer-links a:hover { color: var(--accent); }
+.footer-bottom {
+  max-width: 1300px; margin: 0 auto;
+  padding-top: 40px;
+  border-top: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 20px;
+}
+.footer-copyright {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+.footer-legal {
+  display: flex; gap: 24px;
+}
+.footer-legal a {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gray2);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-legal a:hover { color: var(--accent); }
+
+/* ═══════════════════════════════ AI CHATBOT ═══════════════════════════════ */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 60px; height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  z-index: 9000;
+  box-shadow: 0 0 30px rgba(0,240,255,0.5), 0 8px 32px rgba(0,0,0,0.4);
+  transition: all 0.3s;
+  animation: chatPulse 3s ease-in-out infinite;
+}
+.chatbot-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 60px rgba(0,240,255,0.8);
+}
+@keyframes chatPulse {
+  0%,100% { box-shadow: 0 0 30px rgba(0,240,255,0.5), 0 8px 32px rgba(0,0,0,0.4); }
+  50% { box-shadow: 0 0 50px rgba(0,240,255,0.8), 0 8px 32px rgba(0,0,0,0.4); }
+}
+.chatbot-window {
+  position: fixed;
+  bottom: 108px; right: 32px;
+  width: 360px;
+  background: rgba(13,13,15,0.95);
+  backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  z-index: 9001;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(0,240,255,0.1);
+  transform: translateY(20px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chatbot-window.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+.chat-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.chat-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.chat-title { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: var(--white); }
+.chat-status {
+  font-family: var(--font-clean);
+  font-size: 0.7rem;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 5px;
+}
+.chat-status-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: statusPulse 2s infinite; }
+.chat-close {
+  margin-left: auto;
+  background: none; border: none; cursor: pointer;
+  color: var(--gray); font-size: 1rem;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.chat-close:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+  max-height: 340px;
+  min-height: 200px;
+}
+.chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-msg-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,240,255,0.15);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.chat-msg.user .chat-msg-avatar { background: rgba(0,240,255,0.2); }
+.chat-bubble {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-clean);
+  font-size: 0.82rem;
+  color: var(--white);
+  line-height: 1.6;
+  max-width: 80%;
+}
+.chat-msg.user .chat-bubble {
+  background: rgba(0,240,255,0.12);
+  border-color: rgba(0,240,255,0.2);
+  border-radius: 12px;
+  border-top-right-radius: 4px;
+}
+.chat-typing {
+  display: flex; gap: 4px; align-items: center;
+  padding: 12px 14px;
+}
+.chat-typing span {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: typingBounce 1.4s ease-in-out infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%,100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-6px); opacity: 1; }
+}
+.chat-input-wrap {
+  padding: 16px 20px;
+  border-top: 1px solid var(--glass-border);
+  display: flex; gap: 10px;
+}
+.chat-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--white);
+  font-family: var(--font-clean);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.chat-input:focus { border-color: var(--accent); }
+.chat-input::placeholder { color: var(--gray2); }
+.chat-send {
+  width: 38px; height: 38px;
+  background: var(--accent);
+  border: none; border-radius: 8px; cursor: pointer;
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.chat-send:hover { box-shadow: 0 0 16px rgba(0,240,255,0.5); transform: scale(1.05); }
+.chat-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0 20px 14px;
+}
+.chat-suggestion {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(0,240,255,0.07);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 100px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-suggestion:hover { background: rgba(0,240,255,0.15); }
+
+/* ═══════════════════════════════ PARALLAX FLOATING SHAPES ═══════════════════════════════ */
+.bg-shapes {
+  position: fixed; inset: 0;
+  pointer-events: none; z-index: 0;
+  overflow: hidden;
+}
+.bg-shape {
+  position: absolute;
+  border: 1px solid rgba(0,240,255,0.04);
+  border-radius: 50%;
+  animation: floatShape linear infinite;
+}
+@keyframes floatShape {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* ═══════════════════════════════ MOBILE NAV ═══════════════════════════════ */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(10,10,10,0.97);
+  backdrop-filter: blur(30px);
+  z-index: 999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.mobile-menu a:hover { color: var(--accent); }
+
+/* ═══════════════════════════════ RESPONSIVE ═══════════════════════════════ */
+@media (max-width: 1100px) {
+  .roster-grid { grid-template-columns: repeat(2, 1fr); }
+  .about-grid { grid-template-columns: 1fr; gap: 60px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .news-grid { grid-template-columns: 1fr 1fr; }
+  .news-card.featured { grid-column: 1/-1; }
+  .stat-preview-grid { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 900px) {
+  nav { padding: 0 24px; }
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  .hamburger { display: flex; }
+  #hero { padding: calc(var(--nav-h) + 20px) 24px 100px; }
+  section { padding-left: 24px; padding-right: 24px; }
+  #about, #roster, #news, #schedule, #live, #stats, #media, #merch, #sponsors, #recruitment, #community, #achievements, #contact, #experimental { padding-left: 24px; padding-right: 24px; }
+  .streams-grid { grid-template-columns: 1fr; }
+  .recruitment-container { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; }
+  .merch-coming { grid-template-columns: 1fr; }
+  .community-grid { grid-template-columns: 1fr; }
+  .exp-grid { grid-template-columns: 1fr 1fr; }
+  .hero-stats-row { display: none; }
+  .hero-logo-svg { display: none; }
+  .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+}
+@media (max-width: 640px) {
+  .roster-grid { grid-template-columns: 1fr; }
+  .news-grid { grid-template-columns: 1fr; }
+  .media-grid { grid-template-columns: 1fr; }
+  .stat-preview-grid { grid-template-columns: 1fr; }
+  .exp-grid { grid-template-columns: 1fr; }
+  .hero-ctas { flex-direction: column; }
+  .hero-ctas a { text-align: center; justify-content: center; }
+  .about-hex-grid { grid-template-columns: repeat(2, 1fr); }
+  .form-row { grid-template-columns: 1fr; }
+  .chatbot-window { right: 16px; left: 16px; width: auto; bottom: 100px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Custom Cursor -->
+<div id="cursor"></div>
+
+<!-- Particles Canvas -->
+<canvas id="particles-canvas"></canvas>
+
+<!-- Background Shapes -->
+<div class="bg-shapes" id="bgShapes"></div>
+
+<!-- ══════════════ NAVIGATION ══════════════ -->
+<nav id="navbar">
+  <a href="#hero" class="nav-logo">CKS</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#roster">Roster</a></li>
+    <li><a href="#news">News</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#live">Live</a></li>
+    <li><a href="#stats">Stats</a></li>
+    <li><a href="#media">Media</a></li>
+    <li><a href="#merch">Merch</a></li>
+    <li><a href="#sponsors">Sponsors</a></li>
+    <li><a href="#recruitment">Tryouts</a></li>
+    <li><a href="#community">Community</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#recruitment" class="nav-cta ripple-btn">Join Us</a>
+  <div class="hamburger" id="hamburger" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#roster" onclick="closeMobile()">Roster</a>
+  <a href="#news" onclick="closeMobile()">News</a>
+  <a href="#schedule" onclick="closeMobile()">Schedule</a>
+  <a href="#live" onclick="closeMobile()">Live</a>
+  <a href="#stats" onclick="closeMobile()">Stats</a>
+  <a href="#media" onclick="closeMobile()">Media</a>
+  <a href="#merch" onclick="closeMobile()">Merch</a>
+  <a href="#sponsors" onclick="closeMobile()">Sponsors</a>
+  <a href="#recruitment" onclick="closeMobile()">Tryouts</a>
+  <a href="#community" onclick="closeMobile()">Community</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- ══════════════ HERO ══════════════ -->
+<section id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-bg-vignette"></div>
+  <div class="hero-bg-glow"></div>
+  <div class="hero-bg-glow2"></div>
+  <div class="hero-content">
+    <div class="hero-status">
+      <span class="status-dot"></span>
+      Rocket League — Season 1 Forming
+    </div>
+    <div class="hero-eyebrow">COMPETITIVE ESPORTS TEAM</div>
+    <h1 class="hero-title">
+      <span class="gradient-text">CKS</span><br>
+      <span style="color:rgba(255,255,255,0.85);">ESPORTS</span>
+    </h1>
+    <div class="hero-title-sub">WHO ARE WE?</div>
+    <p class="hero-desc">
+      CKS ESPORTS operates as a Rocket League ESPORTS team focused on reaching competitive tiers such as ECS and RLCS Open Qualifiers.  </p>
+    <div class="hero-ctas">
+      <a href="#roster" class="btn-primary ripple-btn">
+        ▶ &nbsp;View Roster
+      </a>
+    </div>
+  </div>
+  <!-- Animated SVG decorative element -->
+  <svg class="hero-logo-svg" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M160 20 L300 100 L300 220 L160 300 L20 220 L20 100 Z"/>
+    <path d="M160 50 L270 115 L270 205 L160 270 L50 205 L50 115 Z"/>
+    <path d="M160 80 L240 130 L240 190 L160 240 L80 190 L80 130 Z"/>
+    <path d="M160 0 L160 320 M0 160 L320 160"/>
+    <circle cx="160" cy="160" r="40"/>
+    <circle cx="160" cy="160" r="80"/>
+  </svg>
+  <!-- Stats -->
+  <div class="hero-stats-row">
+  </div>
+  <div class="hero-scroll-indicator" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════════ TICKER ══════════════ -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track" id="tickerTrack">
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+    <span class="ticker-item">CKS ESPORTS <span class="ticker-sep">◆</span></span>
+  </div>
+</div>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal-left">
+    <div class="about-content reveal-right">
+      <div class="section-label">About CKS</div>
+      <h2 class="section-title"><span class="gradient-text">═══════════════════════════════════════</span></h2>
+      <p class="about-body">
+        CKS Esports was founded with a clear directive: build a Rocket League organization that operates with the discipline, structure, and ambition of the world's top esports brands.
+      </p>
+      <p class="about-body">
+       CKS Esports was founded with a clear directive: establish a Rocket League organization that operates with the discipline, structure, and standards expected of top‑tier esports programs.
+
+We are not a casual team. We are a competitive entity in development — recruiting the right players, building the right systems, and preparing to enter structured competition with intent. Every decision, from roster construction to brand identity, is made with long‑term competitive stability in mind.
+      </p>
+             </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ ROSTER ══════════════ -->
+<section id="roster">
+  <div class="roster-header reveal">
+    <div class="section-label" style="justify-content:center">ROSTER</div>
+    <h2 class="section-title">Official <span class="gradient-text">Roster</span></h2>
+    <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:500px;margin:0 auto">
+      Our active competitive roster for CKS ESPORTS.
+    </p>
+  </div>
+  <div class="roster-grid">
+
+    <!-- Player 1: SaucyRL -->
+    <div class="player-card reveal" style="transition-delay:0.1s" data-tilt>
+      <div class="player-card-top">
+        <div class="player-number">#01</div>
+        <div class="player-avatar">🎮</div>
+        <div class="player-tag">SaucyRL</div>
+      </div>
+      <div class="player-card-body">
+        <div class="player-role-badge">
+          <span class="player-role-dot"></span>
+          Player 1
+        </div>
+        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
+        </div>
+        <div class="player-social">
+          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
+          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
+          <a href="#" title="Discord" aria-label="Discord">◈</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player 2: Nexus -->
+    <div class="player-card reveal" style="transition-delay:0.2s" data-tilt>
+      <div class="player-card-top">
+        <div class="player-number">#02</div>
+        <div class="player-avatar">⚡</div>
+        <div class="player-tag">Nexus</div>
+      </div>
+      <div class="player-card-body">
+        <div class="player-role-badge">
+          <span class="player-role-dot"></span>
+          Player 2
+        </div>
+        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
+        </div>
+        <div class="player-social">
+          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
+          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
+          <a href="#" title="Discord" aria-label="Discord">◈</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player 3: Ar4nRL -->
+    <div class="player-card reveal" style="transition-delay:0.3s" data-tilt>
+      <div class="player-card-top">
+        <div class="player-number">#03</div>
+        <div class="player-avatar">🛡️</div>
+        <div class="player-tag">Ar4nRL</div>
+      </div>
+      <div class="player-card-body">
+        <div class="player-role-badge">
+          <span class="player-role-dot"></span>
+          Player 3
+        </div>
+        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
+        </div>
+        <div class="player-social">
+          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
+          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
+          <a href="#" title="Discord" aria-label="Discord">◈</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Player 4: KuraiRL -->
+    <div class="player-card reveal" style="transition-delay:0.3s" data-tilt>
+      <div class="player-card-top">
+        <div class="player-number">#04</div>
+        <div class="player-avatar">⚔️</div>
+        <div class="player-tag">KuraiRL</div>
+      </div>
+      <div class="player-card-body">
+        <div class="player-role-badge">
+          <span class="player-role-dot"></span>
+          Player 4
+        </div>
+        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
+        </div>
+        <div class="player-social">
+          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
+          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
+          <a href="#" title="Discord" aria-label="Discord">◈</a>
+        </div>
+      </div>
+    </div>
+
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ NEWS ══════════════ -->
+<section id="news">
+  <div class="news-header reveal">
+    <div>
+      <div class="section-label">Latest Updates</div>
+      <h2 class="section-title">News & <span class="gradient-text">Articles</span></h2>
+    </div>
+    <a href="#" class="btn-secondary" style="font-size:0.6rem;padding:10px 24px">View All Posts →</a>
+  </div>
+  <div class="news-grid" style="max-width:1300px;margin:0 auto">
+    <div class="news-card featured reveal">
+      <div class="news-card-img">📢</div>
+      <div class="news-card-body">
+        <div class="news-category">Organization</div>
+        <div class="news-card-title">CKS Esports Officially Launches</div>
+        <div class="news-placeholder">CKS Esports is proud to announce our official launch as a Rocket League esports organization. Our founding roster is set and we are actively preparing for structured competition. Stay tuned for upcoming announcements regarding our competitive schedule and future plans.</div>
+        <div class="news-date" style="margin-top:16px">April 2026 · Organizational Announcement</div>
+      </div>
+    </div>
+    <div class="news-card reveal" style="transition-delay:0.15s">
+      <div class="news-card-img" style="font-size:2rem">🎮</div>
+      <div class="news-card-body">
+        <div class="news-category">Roster</div>
+        <div class="news-card-title">Roster Confirmed</div>
+        <div class="news-placeholder">Our active Season 1 lineup featuring SaucyRL and Nexus has been confirmed. The search for a substitute continues.</div>
+        <div class="news-date" style="margin-top:12px">Season 1 · Roster News</div>
+      </div>
+    </div>
+    <div class="news-card reveal" style="transition-delay:0.3s">
+      <div class="news-card-img" style="font-size:2rem">📋</div>
+      <div class="news-card-body">
+        <div class="news-category">Tryouts</div>
+        <div class="news-card-title">Substitute Tryouts Are Now Open</div>
+        <div class="news-placeholder">CKS Esports is actively scouting for a substitute player. If you have what it takes, submit your application through our Tryouts page.</div>
+        <div class="news-date" style="margin-top:12px">Season 1 · Recruitment</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ SCHEDULE / MATCHES ══════════════ -->
+<section id="schedule">
+  <div class="schedule-container">
+    <div class="reveal">
+      <div class="section-label">Calendar</div>
+      <h2 class="section-title">Schedule & <span class="gradient-text">Matches</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:600px;margin-bottom:48px">
+        Our competitive calendar. Match dates and tournament entries will be posted here as they are confirmed.
+      </p>
+    </div>
+    <div class="schedule-tabs reveal">
+      <button class="tab-btn active" onclick="switchTab(this,'upcoming')">Upcoming</button>
+      <button class="tab-btn" onclick="switchTab(this,'results')">Results</button>
+      <button class="tab-btn" onclick="switchTab(this,'tournaments')">Tournaments</button>
+    </div>
+    <div id="tab-upcoming" class="match-list reveal">
+      <div class="match-card" style="opacity:0.5;pointer-events:none">
+        <div class="match-date-col">
+          <div>TBD</div>
+          <div class="match-time">Time TBD</div>
+        </div>
+        <div class="match-event">
+          First Competitive Match
+          <span>Tournament / League · TBD</span>
+        </div>
+        <div class="match-vs">
+          <div class="match-team cks">CKS</div>
+          <div class="match-vs-label">VS</div>
+          <div class="match-team opp">TBD</div>
+        </div>
+        <div class="match-status status-tbd">TBD</div>
+      </div>
+      <div class="schedule-empty">
+        <span class="schedule-empty-icon">📅</span>
+        No upcoming matches scheduled yet. Check back soon — our first match will be announced shortly.
+      </div>
+    </div>
+    <div id="tab-results" class="match-list reveal" style="display:none">
+      <div class="schedule-empty">
+        <span class="schedule-empty-icon">🏁</span>
+        No results yet. Season 1 hasn't started. Our match history will be archived here as we compete.
+      </div>
+    </div>
+    <div id="tab-tournaments" class="match-list reveal" style="display:none">
+      <div class="schedule-empty">
+        <span class="schedule-empty-icon">🏆</span>
+        No tournament entries confirmed yet. We are actively evaluating competitions to enter. Announcements coming soon.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ LIVE / STREAMS ══════════════ -->
+<section id="live">
+  <div style="max-width:1300px;margin:0 auto 60px">
+    <div class="reveal">
+      <div class="section-label">Watch Live</div>
+      <h2 class="section-title">Streams & <span class="gradient-text">Live Coverage</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:600px">
+        Follow our players live. Streams go up during scrims, practice sessions, and competitive play. Check each player's channel directly.
+      </p>
+    </div>
+  </div>
+  <div class="streams-grid" style="max-width:1300px;margin:0 auto">
+    <div class="stream-main reveal-left">
+      <div class="stream-preview">
+        <div class="stream-scan-line"></div>
+        <div class="stream-offline-msg">
+          <span class="stream-offline-icon">📡</span>
+          <div class="stream-offline-text">No Active Broadcast</div>
+          <div style="font-family:var(--font-clean);font-size:0.8rem;color:rgba(138,138,154,0.5);margin-top:8px;font-style:italic">
+            CKS Live will appear here during events
+          </div>
+        </div>
+      </div>
+      <div class="stream-footer">
+        <div class="stream-channel">
+          CKS Esports Official
+          <span>Follow for live match coverage</span>
+        </div>
+        <div class="match-status status-tbd">Offline</div>
+      </div>
+    </div>
+    <div class="stream-channels reveal-right">
+      <div style="font-family:var(--font-display);font-size:0.6rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:16px">Player Channels</div>
+      <div class="stream-card">
+        <div class="stream-avatar">🎮</div>
+        <div class="stream-info">
+          <div class="stream-name">SaucyRL</div>
+          <div class="stream-platform">Twitch / YouTube · Add links when available</div>
+        </div>
+        <div class="stream-badge-offline">Offline</div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-avatar">⚡</div>
+        <div class="stream-info">
+          <div class="stream-name">Nexus</div>
+          <div class="stream-platform">Twitch / YouTube · Add links when available</div>
+        </div>
+        <div class="stream-badge-offline">Offline</div>
+      </div>
+      <div class="stream-card">
+        <div class="stream-avatar">🛡️</div>
+        <div class="stream-info">
+          <div class="stream-name">Nexus</div>
+          <div class="stream-platform">Twitch / YouTube · Add links when available</div>
+        </div>
+        <div class="stream-badge-offline">Offline</div>
+      </div>
+      <div style="background:var(--glass);border:1px dashed rgba(0,240,255,0.1);border-radius:12px;padding:20px 24px;margin-top:8px">
+        <div style="font-family:var(--font-display);font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray2);text-align:center">
+          Stream notifications — follow our social channels for live alerts
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ STATS / ANALYTICS ══════════════ -->
+<section id="stats">
+  <div class="stats-container">
+    <div class="reveal">
+      <div class="section-label">Performance</div>
+      <h2 class="section-title">Stats & <span class="gradient-text">Analytics</span></h2>
+    </div>
+    <div class="stats-coming-soon reveal">
+      <span class="stats-icon">📊</span>
+      <div class="stats-title">Analytics System — Coming Online</div>
+      <div class="stats-desc">
+        Real-time player statistics, match performance breakdowns, heatmaps, and competitive analytics will be tracked and displayed here once competitive play begins. No fabricated numbers — only real data.
+      </div>
+      <a href="#recruitment" class="btn-secondary">Be Part of the Story</a>
+    </div>
+    <div class="stat-preview-grid">
+      <div class="stat-preview-card reveal" style="transition-delay:0.1s">
+        <div class="stat-preview-label">Matches Played</div>
+        <div class="stat-preview-val tracked">0</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:0%"></div></div>
+      </div>
+      <div class="stat-preview-card reveal" style="transition-delay:0.2s">
+        <div class="stat-preview-label">Win Rate</div>
+        <div class="stat-preview-val">—</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:0%"></div></div>
+      </div>
+      <div class="stat-preview-card reveal" style="transition-delay:0.3s">
+        <div class="stat-preview-label">Goals Scored</div>
+        <div class="stat-preview-val tracked">0</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:0%"></div></div>
+      </div>
+      <div class="stat-preview-card reveal" style="transition-delay:0.4s">
+        <div class="stat-preview-label">Tournament Rank</div>
+        <div class="stat-preview-val">—</div>
+        <div class="stat-bar"><div class="stat-bar-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ HIGHLIGHTS / MEDIA ══════════════ -->
+<section id="media">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="reveal" style="margin-bottom:48px">
+      <div class="section-label">Media Vault</div>
+      <h2 class="section-title">Highlights & <span class="gradient-text">Media</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:600px">
+        Match highlights, individual plays, VOD reviews, and team content will be archived here. Content uploads begin once competitive play starts.
+      </p>
+    </div>
+    <div class="media-filter reveal">
+      <button class="filter-btn active" onclick="filterMedia(this,'all')">All Content</button>
+      <button class="filter-btn" onclick="filterMedia(this,'highlights')">Highlights</button>
+      <button class="filter-btn" onclick="filterMedia(this,'gameplay')">Gameplay</button>
+      <button class="filter-btn" onclick="filterMedia(this,'vods')">VODs</button>
+      <button class="filter-btn" onclick="filterMedia(this,'behind')">Behind the Scenes</button>
+    </div>
+    <div class="media-grid">
+      <!-- Placeholder media slots to show future content structure -->
+      <div class="media-card reveal" style="transition-delay:0.1s;opacity:0.35;pointer-events:none">
+        <div class="media-thumb">
+          🎬
+          <div class="media-play">▶</div>
+          <div class="media-label">Highlights</div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">Season 1 Opening Highlights</div>
+          <div class="media-meta">Pending · Upload when available</div>
+        </div>
+      </div>
+      <div class="media-card reveal" style="transition-delay:0.2s;opacity:0.35;pointer-events:none">
+        <div class="media-thumb">
+          🎯
+          <div class="media-play">▶</div>
+          <div class="media-label">Gameplay</div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">SaucyRL — Ranked Gameplay</div>
+          <div class="media-meta">Pending · Upload when available</div>
+        </div>
+      </div>
+      <div class="media-card reveal" style="transition-delay:0.3s;opacity:0.35;pointer-events:none">
+        <div class="media-thumb">
+          📹
+          <div class="media-play">▶</div>
+          <div class="media-label">VOD</div>
+        </div>
+        <div class="media-body">
+          <div class="media-title">Team Practice — VOD Review</div>
+          <div class="media-meta">Pending · Upload when available</div>
+        </div>
+      </div>
+      <div class="media-placeholder-msg reveal">
+        <span style="display:block;font-size:3rem;margin-bottom:16px;opacity:0.25">🎥</span>
+        Media content will appear here as we begin competing and streaming. No filler content — everything posted is real.
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ MERCH / STORE ══════════════ -->
+<section id="merch">
+  <div class="merch-coming" style="max-width:1300px;margin:0 auto">
+    <div class="reveal-left">
+      <div class="section-label">Store</div>
+      <h2 class="section-title">Merch & <span class="gradient-text">Apparel</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;margin-bottom:24px">
+        The CKS Esports store is in development. We're building a premium apparel line that reflects our brand identity — no low-effort merch, only gear worth wearing.
+      </p>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;margin-bottom:36px">
+        Leave your email below and we'll notify you when the store launches. Early supporters may receive exclusive launch-day discounts.
+      </p>
+      <div class="notify-form">
+        <input type="email" class="notify-input" placeholder="your@email.com" aria-label="Email for merch notification">
+        <button class="btn-primary ripple-btn" onclick="notifyMe(this)">Notify Me</button>
+      </div>
+      <p style="font-family:var(--font-clean);font-size:0.75rem;color:var(--gray2);margin-top:12px">
+        No spam. One email when the store goes live.
+      </p>
+    </div>
+    <div class="reveal-right">
+      <div class="merch-mockup">
+        <div class="merch-mockup-icon">👕</div>
+        <div class="merch-mockup-label">Store Coming Soon</div>
+        <div style="font-family:var(--font-display);font-size:0.55rem;color:rgba(138,138,154,0.4);letter-spacing:0.3em;text-transform:uppercase">
+          CKS Esports Apparel
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ SPONSORS / PARTNERS ══════════════ -->
+<section id="sponsors">
+  <div class="sponsors-container">
+    <div class="reveal">
+      <div class="section-label">Partners</div>
+      <h2 class="section-title">Sponsors & <span class="gradient-text">Partners</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:680px;margin-bottom:0">
+        CKS Esports is actively seeking its founding sponsors and partners. We offer early-stage brand exposure within a competitive, passionate esports community. Interested? Read our pitch below.
+      </p>
+    </div>
+    <div class="sponsor-tiers reveal">
+      <div>
+        <div class="sponsor-tier-label">Title Sponsor</div>
+        <div class="sponsor-slots">
+          <div class="sponsor-slot" onclick="scrollToContact()">
+            <div class="sponsor-slot-text">Your Brand Here — Inquire ↗</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sponsor-tier-label">Gold Partners</div>
+        <div class="sponsor-slots">
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot — Inquire</div></div>
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot — Inquire</div></div>
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot — Inquire</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sponsor-tier-label">Community Partners</div>
+        <div class="sponsor-slots">
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot</div></div>
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot</div></div>
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot</div></div>
+          <div class="sponsor-slot" onclick="scrollToContact()"><div class="sponsor-slot-text">Open Slot</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="sponsor-pitch reveal">
+      <div class="sponsor-pitch-title">Become a Founding Partner</div>
+      <div class="sponsor-pitch-desc">
+        CKS Esports is at the beginning of its journey — and that's exactly why now is the right time to partner with us. Early-stage sponsorships come with maximum brand visibility, direct audience relationships, and the prestige of being the organization that was here from the start.
+      </div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <a href="#contact" class="btn-primary ripple-btn">Request Partnership Info</a>
+        <a href="#" class="btn-secondary" style="font-size:0.65rem">Download Media Kit (Coming Soon)</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ COMMUNITY ══════════════ -->
+<section id="community">
+  <div class="community-container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 0">
+      <div class="section-label" style="justify-content:center">Fan Zone</div>
+      <h2 class="section-title">Community & <span class="gradient-text">Engagement</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8">
+        CKS Esports isn't just a competitive team — it's a growing community. Join our channels, follow our journey, and be part of something from the very beginning.
+      </p>
+    </div>
+    <div class="community-grid">
+      <div class="community-card reveal" style="transition-delay:0.1s">
+        <span class="community-icon">💬</span>
+        <div class="community-title">Discord Server</div>
+        <div class="community-desc">Join our official Discord — connect with players, follow match updates, participate in community discussions, and engage with the CKS team directly.</div>
+        <a href="#" class="community-cta">Join Discord →</a>
+      </div>
+      <div class="community-card reveal" style="transition-delay:0.2s">
+        <span class="community-icon">𝕏</span>
+        <div class="community-title">Twitter / X</div>
+        <div class="community-desc">Follow @CKSEsports for real-time updates, match announcements, roster news, and organizational milestones as we grow.</div>
+        <a href="#" class="community-cta">Follow Us →</a>
+      </div>
+      <div class="community-card reveal" style="transition-delay:0.3s">
+        <span class="community-icon">▶</span>
+        <div class="community-title">YouTube Channel</div>
+        <div class="community-desc">Subscribe for match highlights, team content, VOD reviews, and player features as we build out our media presence.</div>
+        <a href="#" class="community-cta">Subscribe →</a>
+      </div>
+      <div class="community-card reveal" style="transition-delay:0.4s">
+        <span class="community-icon">📸</span>
+        <div class="community-title">Instagram</div>
+        <div class="community-desc">Follow our visual journey — team branding, match graphics, and behind-the-scenes moments from the CKS organization.</div>
+        <a href="#" class="community-cta">Follow →</a>
+      </div>
+      <div class="community-card reveal" style="transition-delay:0.5s">
+        <span class="community-icon">🎮</span>
+        <div class="community-title">Twitch</div>
+        <div class="community-desc">Watch our players stream live — ranked games, scrims, team practices, and casual sessions when available.</div>
+        <a href="#" class="community-cta">Follow on Twitch →</a>
+      </div>
+      <div class="community-card reveal" style="transition-delay:0.6s">
+        <span class="community-icon">📧</span>
+        <div class="community-title">Newsletter</div>
+        <div class="community-desc">Subscribe to the CKS newsletter for weekly updates, match previews, roster news, and exclusive content delivered to your inbox.</div>
+        <a href="#contact" class="community-cta">Subscribe →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ ACHIEVEMENTS ══════════════ -->
+<section id="achievements">
+  <div class="achievements-container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <div class="section-label" style="justify-content:center">Track Record</div>
+      <h2 class="section-title">Achievements & <span class="gradient-text">History</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8">
+        CKS Esports is in Season 1. This page will serve as our permanent competitive record — every tournament result, ranking, and organizational milestone logged and archived here.
+      </p>
+    </div>
+    <div class="ach-empty reveal">
+      <span class="ach-trophy">🏆</span>
+      <div class="ach-title">Achievement Log — Season 1 Pending</div>
+      <div class="ach-desc">
+        The record book is empty — for now. Every trophy earned, every tournament placed, every milestone reached will be documented here permanently. The clock starts when we compete.
+      </div>
+      <a href="#schedule" class="btn-secondary">View Schedule</a>
+    </div>
+    <div class="ach-timeline reveal">
+      <div class="ach-item">
+        <div class="ach-dot"></div>
+        <div class="ach-item-text">Org Founded — CKS Esports Established</div>
+      </div>
+      <div class="ach-item">
+        <div class="ach-dot"></div>
+        <div class="ach-item-text">Roster Locked — Season 1 Lineup Confirmed</div>
+      </div>
+      <div class="ach-item" style="opacity:0.2">
+        <div class="ach-dot"></div>
+        <div class="ach-item-text">First Tournament Entry — TBD</div>
+      </div>
+      <div class="ach-item" style="opacity:0.1">
+        <div class="ach-dot"></div>
+        <div class="ach-item-text">Future Milestones — To Be Written</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ CONTACT / FAQ ══════════════ -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info reveal-left">
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title">Contact & <span class="gradient-text">FAQ</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;margin-bottom:8px">
+        Whether you're a potential sponsor, player, or community member — we want to hear from you. Reach out through any of the channels below.
+      </p>
+      <div class="contact-links">
+        <a href="mailto:contact@cksesports.com" class="contact-link-card">
+          <span class="contact-link-icon">✉️</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Email</div>
+            <div class="contact-link-val">contact@cksesports.com</div>
+          </div>
+        </a>
+        <a href="#" class="contact-link-card">
+          <span class="contact-link-icon">💬</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Discord</div>
+            <div class="contact-link-val">discord.gg/cksesports (Coming Soon)</div>
+          </div>
+        </a>
+        <a href="#" class="contact-link-card">
+          <span class="contact-link-icon">𝕏</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Twitter / X</div>
+            <div class="contact-link-val">@CKSEsports (Coming Soon)</div>
+          </div>
+        </a>
+        <a href="#" class="contact-link-card">
+          <span class="contact-link-icon">💼</span>
+          <div class="contact-link-info">
+            <div class="contact-link-label">Sponsorship Inquiries</div>
+            <div class="contact-link-val">sponsors@cksesports.com</div>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div style="font-family:var(--font-display);font-size:0.65rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:24px">Frequently Asked Questions</div>
+      <div class="faq-list">
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            What game does CKS Esports compete in?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">CKS Esports competes exclusively in Rocket League. We are a dedicated Rocket League organization focused on building a competitive team capable of entering structured league and tournament play.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            How do I try out for CKS Esports?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Fill out the tryout application form in the Recruitment section above. Include your in-game name, rank, platform, Discord, and any gameplay clips you'd like us to review. We evaluate all applications and follow up via Discord or email.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Is CKS Esports looking for sponsors?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Yes. We are actively seeking founding partners and sponsors. Email us at sponsors@cksesports.com with your inquiry or use the contact form to request our sponsorship package. Early partnerships carry unique long-term value.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            When does Season 1 competition begin?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">We are currently in the formation phase of Season 1. Our roster is confirmed and we are evaluating tournament entries. Match dates will be announced on our website and social channels as they are confirmed. Follow us to stay updated.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Can I contribute to CKS as a content creator or designer?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Absolutely. We are open to working with talented content creators, graphic designers, video editors, and social media managers who align with our brand vision. Reach out via email with examples of your work and your areas of interest.</div>
+          </div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            Where can I watch CKS matches live?
+            <span class="faq-arrow">▾</span>
+          </div>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">Live match coverage will be available through our Twitch channel and YouTube once competitive play begins. Player streams will also be available through their personal channels. Follow our social media for live alerts.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ AR / VR EXPERIMENTAL ══════════════ -->
+<section id="experimental">
+  <div class="exp-container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 0">
+      <div class="section-label" style="justify-content:center">Future Tech</div>
+      <h2 class="section-title">AR / VR & <span class="gradient-text">Experimental</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8">
+        Next-generation fan experience features in development. We're building the future of esports interaction — augmented reality, immersive content, and experimental engagement systems.
+      </p>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal" style="transition-delay:0.1s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🥽</span>
+        <div class="exp-title">AR Player Cards</div>
+        <div class="exp-desc">Scan a physical CKS card to reveal a 3D animated player profile with real-time stats overlaid in augmented reality. Compatible with iOS and Android.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.2s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🎮</span>
+        <div class="exp-title">VR Watch Party</div>
+        <div class="exp-desc">Watch live CKS matches in a virtual arena alongside other fans. Spatial audio, real-time reactions, and a social layer built natively for VR headsets.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.3s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🤖</span>
+        <div class="exp-title">AI Match Predictor</div>
+        <div class="exp-desc">Our AI system will analyze team performance data to generate live win-probability predictions, momentum charts, and post-match breakdowns.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.4s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🌐</span>
+        <div class="exp-title">3D Arena Viewer</div>
+        <div class="exp-desc">An interactive 3D Rocket League arena experience embedded in the browser. Explore our virtual home court, view match replays in spatial context, and interact with team data.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.5s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🏅</span>
+        <div class="exp-title">Fan Achievement System</div>
+        <div class="exp-desc">Earn badges and unlock exclusive content by engaging with CKS milestones — first match watch, early signup, community contributions, and more.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.6s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">📊</span>
+        <div class="exp-title">Live Analytics Overlay</div>
+        <div class="exp-desc">A real-time streaming overlay integrating live player stats, positioning data, and AI-generated insights for broadcast-grade match coverage.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ══════════════ FOOTER ══════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="nav-logo" style="font-size:1.8rem;display:block;margin-bottom:4px">CKS</div>
+      <div style="font-family:var(--font-display);font-size:0.6rem;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:var(--gray2);margin-bottom:16px">ESPORTS</div>
+      <div class="footer-brand-desc">
+        A competitive Rocket League esports organization built with the discipline, ambition, and structure of a world-class team — from day one. We compete, we grow, we win.
+      </div>
+      <div class="footer-social">
+        <a href="#" aria-label="Twitter/X">𝕏</a>
+        <a href="#" aria-label="Discord">◈</a>
+        <a href="#" aria-label="Twitch">▶</a>
+        <a href="#" aria-label="YouTube">▷</a>
+        <a href="#" aria-label="Instagram">◎</a>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-title">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#roster">Roster</a></li>
+        <li><a href="#news">News</a></li>
+        <li><a href="#schedule">Schedule</a></li>
+        <li><a href="#live">Live</a></li>
+        <li><a href="#stats">Stats</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Organization</div>
+      <ul class="footer-links">
+        <li><a href="#media">Media</a></li>
+        <li><a href="#merch">Merch</a></li>
+        <li><a href="#sponsors">Sponsors</a></li>
+        <li><a href="#recruitment">Tryouts</a></li>
+        <li><a href="#community">Community</a></li>
+        <li><a href="#achievements">Achievements</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-title">Contact</div>
+      <ul class="footer-links">
+        <li><a href="#contact">FAQ</a></li>
+        <li><a href="mailto:contact@cksesports.com">General Email</a></li>
+        <li><a href="mailto:sponsors@cksesports.com">Sponsorship</a></li>
+        <li><a href="#recruitment">Tryouts</a></li>
+        <li><a href="#experimental">Experimental</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copyright">© 2025 CKS Esports. All rights reserved.</div>
+    <div class="footer-legal">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Use</a>
+      <a href="#">Cookie Policy</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ══════════════ AI CHATBOT ══════════════ -->
+<button class="chatbot-toggle" id="chatToggle" aria-label="Open CKS AI Assistant">🤖</button>
+<div class="chatbot-window" id="chatWindow">
+  <div class="chat-header">
+    <div class="chat-avatar">⚡</div>
+    <div>
+      <div class="chat-title">CKS AI Assistant</div>
+      <div class="chat-status"><span class="chat-status-dot"></span> Online</div>
+    </div>
+    <button class="chat-close" onclick="toggleChat()" aria-label="Close chat">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg">
+      <div class="chat-msg-avatar">⚡</div>
+      <div class="chat-bubble">Hey, welcome to CKS Esports! 👋 I'm your AI assistant. I can help with tryout info, roster questions, sponsor inquiries, or anything about the organization. What do you need?</div>
+    </div>
+  </div>
+  <div class="chat-suggestions" id="chatSuggestions">
+    <button class="chat-suggestion" onclick="quickChat('How do I try out?')">Try Out?</button>
+    <button class="chat-suggestion" onclick="quickChat('Who is on the roster?')">Roster</button>
+    <button class="chat-suggestion" onclick="quickChat('Sponsorship info')">Sponsor?</button>
+    <button class="chat-suggestion" onclick="quickChat('When do you compete?')">Schedule?</button>
+  </div>
+  <div class="chat-input-wrap">
+    <input class="chat-input" id="chatInput" type="text" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendChat()">
+    <button class="chat-send" onclick="sendChat()" aria-label="Send message">➤</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════ CURSOR ═══════════════════════════════
+const cursor = document.getElementById('cursor');
+const cursorTrail = document.getElementById('cursor-trail');
+let mouseX = 0, mouseY = 0;
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  setTimeout(() => {
+    cursorTrail.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
+  }, 80);
+});
+document.querySelectorAll('a, button, .player-card, .news-card, .media-card, .community-card, .exp-card').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('cursor-expand'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('cursor-expand'));
+});
+
+// ═══════════════════════════════ PARTICLES ═══════════════════════════════
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [], animFrame;
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+class Particle {
+  constructor() { this.reset(); }
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.vx = (Math.random() - 0.5) * 0.3;
+    this.vy = (Math.random() - 0.5) * 0.3;
+    this.r = Math.random() * 1.5 + 0.3;
+    this.alpha = Math.random() * 0.5 + 0.1;
+    this.color = Math.random() > 0.7 ? '0,240,255' : '255,255,255';
+  }
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) this.reset();
+  }
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color},${this.alpha})`;
+    ctx.fill();
+  }
+}
+for (let i = 0; i < 120; i++) particles.push(new Particle());
+function animParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => { p.update(); p.draw(); });
+  // Draw connections
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 120) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(0,240,255,${0.06 * (1 - dist/120)})`;
+        ctx.lineWidth = 0.5;
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(animParticles);
+}
+animParticles();
+
+// Mouse-reactive particles
+document.addEventListener('mousemove', e => {
+  particles.forEach(p => {
+    const dx = p.x - e.clientX;
+    const dy = p.y - e.clientY;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 100) {
+      p.vx += dx * 0.0002;
+      p.vy += dy * 0.0002;
+    }
+  });
+});
+
+// ═══════════════════════════════ BACKGROUND SHAPES ═══════════════════════════════
+const bgShapes = document.getElementById('bgShapes');
+for (let i = 0; i < 12; i++) {
+  const s = document.createElement('div');
+  s.className = 'bg-shape';
+  const size = Math.random() * 300 + 100;
+  s.style.cssText = `
+    width:${size}px;height:${size}px;
+    left:${Math.random()*100}%;top:${Math.random()*100}%;
+    animation-duration:${Math.random()*20+15}s;
+    animation-delay:${Math.random()*-20}s;
+    opacity:${Math.random()*0.3};
+  `;
+  bgShapes.appendChild(s);
+}
+
+// ═══════════════════════════════ NAV SCROLL ═══════════════════════════════
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 50) navbar.classList.add('scrolled');
+  else navbar.classList.remove('scrolled');
+});
+
+// ═══════════════════════════════ MOBILE MENU ═══════════════════════════════
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+function closeMobile() { mobileMenu.classList.remove('open'); }
+
+// ═══════════════════════════════ SCROLL REVEAL ═══════════════════════════════
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+const revealObs = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      const delay = entry.target.style.transitionDelay || '0s';
+      entry.target.classList.add('visible');
+      revealObs.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+revealEls.forEach(el => revealObs.observe(el));
+
+// ═══════════════════════════════ PARALLAX ═══════════════════════════════
+window.addEventListener('scroll', () => {
+  const sy = window.scrollY;
+  const heroBg = document.querySelector('.hero-bg-glow');
+  const heroBg2 = document.querySelector('.hero-bg-glow2');
+  if (heroBg) heroBg.style.transform = `translateY(${sy * 0.15}px) scale(1)`;
+  if (heroBg2) heroBg2.style.transform = `translateY(${sy * -0.08}px) scale(1)`;
+  const grid = document.querySelector('.hero-bg-grid');
+  if (grid) grid.style.transform = `translateY(${sy * 0.3}px)`;
+});
+
+// ═══════════════════════════════ 3D TILT CARDS ═══════════════════════════════
+document.querySelectorAll('[data-tilt]').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+    const rotX = ((y - cy) / cy) * -10;
+    const rotY = ((x - cx) / cx) * 10;
+    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateY(-12px) scale(1.03)`;
+    card.style.boxShadow = `
+      ${-rotY}px ${rotX}px 40px rgba(0,240,255,0.15),
+      0 24px 80px rgba(0,0,0,0.6)
+    `;
+  });
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = '';
+    card.style.boxShadow = '';
+  });
+});
+
+// ═══════════════════════════════ RIPPLE EFFECT ═══════════════════════════════
+document.querySelectorAll('.ripple-btn').forEach(btn => {
+  btn.addEventListener('click', e => {
+    const r = document.createElement('span');
+    r.className = 'ripple';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    r.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;`;
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 600);
+  });
+});
+
+// ═══════════════════════════════ SCHEDULE TABS ═══════════════════════════════
+function switchTab(btn, tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#tab-upcoming, #tab-results, #tab-tournaments').forEach(t => t.style.display = 'none');
+  const el = document.getElementById('tab-' + tabId);
+  if (el) el.style.display = 'flex';
+}
+
+// ═══════════════════════════════ MEDIA FILTER ═══════════════════════════════
+function filterMedia(btn, cat) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════ FAQ ═══════════════════════════════
+function toggleFaq(question) {
+  const item = question.parentElement;
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f => f.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+// ═══════════════════════════════ NOTIFY ME ═══════════════════════════════
+function notifyMe(btn) {
+  const input = btn.previousElementSibling;
+  if (!input.value || !input.value.includes('@')) {
+    input.style.borderColor = 'rgba(255,80,80,0.6)';
+    setTimeout(() => input.style.borderColor = '', 2000);
+    return;
+  }
+  btn.textContent = '✓ Subscribed!';
+  btn.style.background = '#00cc88';
+  btn.style.boxShadow = '0 0 30px rgba(0,204,136,0.4)';
+  input.value = '';
+  setTimeout(() => { btn.textContent = 'Notify Me'; btn.style.background = ''; btn.style.boxShadow = ''; }, 3000);
+}
+
+// ═══════════════════════════════ TRYOUT FORM ═══════════════════════════════
+function submitTryout(e) {
+  e.preventDefault();
+  const btn = e.target.querySelector('.form-submit');
+  btn.textContent = '✓ Application Submitted!';
+  btn.style.background = '#00cc88';
+  btn.style.boxShadow = '0 0 30px rgba(0,204,136,0.4)';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Submit Application ◈';
+    btn.style.background = '';
+    btn.style.boxShadow = '';
+    btn.disabled = false;
+    e.target.reset();
+  }, 4000);
+}
+
+// ═══════════════════════════════ CONTACT SCROLL ═══════════════════════════════
+function scrollToContact() {
+  document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ═══════════════════════════════ AI CHATBOT ═══════════════════════════════
+const chatToggle = document.getElementById('chatToggle');
+const chatWindow = document.getElementById('chatWindow');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+
+function toggleChat() {
+  chatWindow.classList.toggle('open');
+  if (chatWindow.classList.contains('open')) chatInput.focus();
+}
+chatToggle.addEventListener('click', toggleChat);
+
+const botResponses = {
+  'tryout': "To try out for CKS Esports, scroll to the Recruitment section and fill out the application form. Include your in-game tag, rank, platform, Discord, and any gameplay clips. We review all applications and respond within 5–7 days. 🎯",
+  'roster': "Our current Season 1 roster features:\n• SaucyRL (#01 — Attacker)\n• Nexus (#02 — Midfielder)\n• Nexus (#03 — Defender)\n\nWe also have an open substitute slot. Interested? Apply in the Tryouts section. ⚡",
+  'sponsor': "We're actively seeking founding sponsors! Early partnerships offer great visibility in a growing esports community. Email sponsors@cksesports.com or scroll to the Sponsors section to see partnership tiers. We'd love to talk. 💼",
+  'schedule': "We're in Season 1 formation — our competitive calendar is being finalized. Check the Schedule section for the latest. Follow our social channels for match announcements when they drop. 📅",
+  'merch': "Our store is coming soon! Drop your email in the Merch section to be the first notified — early supporters may get exclusive launch discounts. 👕",
+  'discord': "Our Discord server is coming soon. Follow our socials for the invite link when it launches. We'll post it everywhere. 💬",
+  'contact': "You can reach us at contact@cksesports.com for general inquiries, or sponsors@cksesports.com for partnership opportunities. We respond to all serious messages. ✉️",
+  'default': "Good question! I'm built to help with CKS info — roster, tryouts, sponsors, schedule, and more. Try asking something specific, or head to our Contact section for direct help. 🤖"
+};
+
+function getBotReply(msg) {
+  const m = msg.toLowerCase();
+  if (m.includes('try') || m.includes('join') || m.includes('apply')) return botResponses.tryout;
+  if (m.includes('roster') || m.includes('player') || m.includes('who')) return botResponses.roster;
+  if (m.includes('sponsor') || m.includes('partner') || m.includes('brand')) return botResponses.sponsor;
+  if (m.includes('schedule') || m.includes('match') || m.includes('compet') || m.includes('when')) return botResponses.schedule;
+  if (m.includes('merch') || m.includes('store') || m.includes('shirt') || m.includes('apparel')) return botResponses.merch;
+  if (m.includes('discord') || m.includes('community')) return botResponses.discord;
+  if (m.includes('contact') || m.includes('email') || m.includes('reach')) return botResponses.contact;
+  return botResponses.default;
+}
+
+function addMessage(text, isUser) {
+  const msg = document.createElement('div');
+  msg.className = 'chat-msg' + (isUser ? ' user' : '');
+  msg.innerHTML = `
+    <div class="chat-msg-avatar">${isUser ? '👤' : '⚡'}</div>
+    <div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>
+  `;
+  chatMessages.appendChild(msg);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+function showTyping() {
+  const t = document.createElement('div');
+  t.className = 'chat-msg'; t.id = 'typing';
+  t.innerHTML = '<div class="chat-msg-avatar">⚡</div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>';
+  chatMessages.appendChild(t);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+function removeTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
+
+function sendChat() {
+  const msg = chatInput.value.trim();
+  if (!msg) return;
+  addMessage(msg, true);
+  chatInput.value = '';
+  document.getElementById('chatSuggestions').style.display = 'none';
+  showTyping();
+  setTimeout(() => {
+    removeTyping();
+    addMessage(getBotReply(msg), false);
+  }, 900 + Math.random() * 600);
+}
+
+function quickChat(msg) {
+  chatInput.value = msg;
+  sendChat();
+}
+
+// ═══════════════════════════════ STAT BARS ON SCROLL ═══════════════════════════════
+const statObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.stat-bar-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width || '0%';
+      });
+    }
+  });
+}, { threshold: 0.3 });
+const statsSection = document.getElementById('stats');
+if (statsSection) statObs.observe(statsSection);
+
+// ═══════════════════════════════ DYNAMIC BG COLOR SHIFT ═══════════════════════════════
+let hue = 185;
+function shiftBg() {
+  hue = (hue + 0.05) % 360;
+  document.documentElement.style.setProperty('--accent', `hsl(${hue}, 100%, 50%)`);
+  document.documentElement.style.setProperty('--glass-border', `hsla(${hue}, 100%, 50%, 0.15)`);
+  document.documentElement.style.setProperty('--glow', `0 0 20px hsla(${hue}, 100%, 50%, 0.4), 0 0 60px hsla(${hue}, 100%, 50%, 0.1)`);
+  requestAnimationFrame(shiftBg);
+}
+// Subtle color shift — only every second for performance
+let lastShift = 0;
+function subtleShift(ts) {
+  if (ts - lastShift > 100) {
+    hue = 185 + Math.sin(ts / 8000) * 10;
+    document.documentElement.style.setProperty('--accent', `hsl(${hue}, 100%, 50%)`);
+    document.documentElement.style.setProperty('--glass-border', `hsla(${hue}, 100%, 50%, 0.15)`);
+    lastShift = ts;
+  }
+  requestAnimationFrame(subtleShift);
+}
+requestAnimationFrame(subtleShift);
+
+// ═══════════════════════════════ ACTIVE NAV HIGHLIGHTING ═══════════════════════════════
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const sectionObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => {
+        a.style.color = '';
+        if (a.getAttribute('href') === '#' + e.target.id) {
+          a.style.color = 'var(--accent)';
+        }
+      });
+    }
+  });
+}, { threshold: 0.4 });
+sections.forEach(s => sectionObs.observe(s));
+
+// ═══════════════════════════════ PAGE LOAD ANIMATION ═══════════════════════════════
+document.body.style.opacity = '0';
+window.addEventListener('load', () => {
+  document.body.style.transition = 'opacity 0.6s ease';
+  document.body.style.opacity = '1';
+});
+
+console.log('%cCKS ESPORTS', 'font-size:24px;font-weight:900;color:#00F0FF;');
+console.log('%cBuilt to Compete. Season 1 Forming.', 'font-size:12px;color:#8a8a9a;');
+</script>
+</body>
+</html>
