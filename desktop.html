@@ -1880,6 +1880,186 @@ footer {
 }
 .footer-legal a:hover { color: var(--accent); }
 
+/* ═══════════════════════════════ AI CHATBOT ═══════════════════════════════ */
+.chatbot-toggle {
+  position: fixed;
+  bottom: 32px; right: 32px;
+  width: 60px; height: 60px;
+  background: var(--accent);
+  border-radius: 50%;
+  border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  z-index: 9000;
+  box-shadow: 0 0 30px rgba(0,240,255,0.5), 0 8px 32px rgba(0,0,0,0.4);
+  transition: all 0.3s;
+  animation: chatPulse 3s ease-in-out infinite;
+}
+.chatbot-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 60px rgba(0,240,255,0.8);
+}
+@keyframes chatPulse {
+  0%,100% { box-shadow: 0 0 30px rgba(0,240,255,0.5), 0 8px 32px rgba(0,0,0,0.4); }
+  50% { box-shadow: 0 0 50px rgba(0,240,255,0.8), 0 8px 32px rgba(0,0,0,0.4); }
+}
+.chatbot-window {
+  position: fixed;
+  bottom: 108px; right: 32px;
+  width: 360px;
+  background: rgba(13,13,15,0.95);
+  backdrop-filter: blur(30px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  z-index: 9001;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 40px rgba(0,240,255,0.1);
+  transform: translateY(20px) scale(0.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.chatbot-window.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+.chat-header {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--glass-border);
+  display: flex; align-items: center; gap: 12px;
+}
+.chat-avatar {
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.chat-title { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: var(--white); }
+.chat-status {
+  font-family: var(--font-clean);
+  font-size: 0.7rem;
+  color: var(--accent);
+  display: flex; align-items: center; gap: 5px;
+}
+.chat-status-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; animation: statusPulse 2s infinite; }
+.chat-close {
+  margin-left: auto;
+  background: none; border: none; cursor: pointer;
+  color: var(--gray); font-size: 1rem;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.chat-close:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+.chat-messages {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 16px;
+  max-height: 340px;
+  min-height: 200px;
+}
+.chat-msg { display: flex; gap: 10px; align-items: flex-start; }
+.chat-msg.user { flex-direction: row-reverse; }
+.chat-msg-avatar {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(0,240,255,0.15);
+  border: 1px solid var(--glass-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.chat-msg.user .chat-msg-avatar { background: rgba(0,240,255,0.2); }
+.chat-bubble {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  border-top-left-radius: 4px;
+  padding: 10px 14px;
+  font-family: var(--font-clean);
+  font-size: 0.82rem;
+  color: var(--white);
+  line-height: 1.6;
+  max-width: 80%;
+}
+.chat-msg.user .chat-bubble {
+  background: rgba(0,240,255,0.12);
+  border-color: rgba(0,240,255,0.2);
+  border-radius: 12px;
+  border-top-right-radius: 4px;
+}
+.chat-typing {
+  display: flex; gap: 4px; align-items: center;
+  padding: 12px 14px;
+}
+.chat-typing span {
+  width: 6px; height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: typingBounce 1.4s ease-in-out infinite;
+}
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typingBounce {
+  0%,100% { transform: translateY(0); opacity: 0.4; }
+  50% { transform: translateY(-6px); opacity: 1; }
+}
+.chat-input-wrap {
+  padding: 16px 20px;
+  border-top: 1px solid var(--glass-border);
+  display: flex; gap: 10px;
+}
+.chat-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--white);
+  font-family: var(--font-clean);
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.chat-input:focus { border-color: var(--accent); }
+.chat-input::placeholder { color: var(--gray2); }
+.chat-send {
+  width: 38px; height: 38px;
+  background: var(--accent);
+  border: none; border-radius: 8px; cursor: pointer;
+  color: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+.chat-send:hover { box-shadow: 0 0 16px rgba(0,240,255,0.5); transform: scale(1.05); }
+.chat-suggestions {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0 20px 14px;
+}
+.chat-suggestion {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(0,240,255,0.07);
+  border: 1px solid rgba(0,240,255,0.2);
+  border-radius: 100px;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-suggestion:hover { background: rgba(0,240,255,0.15); }
+
 /* ═══════════════════════════════ PARALLAX FLOATING SHAPES ═══════════════════════════════ */
 .bg-shapes {
   position: fixed; inset: 0;
@@ -1989,7 +2169,6 @@ footer {
     <li><a href="#media">Media</a></li>
     <li><a href="#merch">Merch</a></li>
     <li><a href="#sponsors">Sponsors</a></li>
-    <li><a href="#recruitment">Tryouts</a></li>
     <li><a href="#community">Community</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
@@ -2737,6 +2916,59 @@ We are not a casual team. We are a competitive entity in development — recruit
 
 <div class="section-divider"></div>
 
+<!-- ══════════════ AR / VR EXPERIMENTAL ══════════════ -->
+<section id="experimental">
+  <div class="exp-container">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 0">
+      <div class="section-label" style="justify-content:center">Future Tech</div>
+      <h2 class="section-title">AR / VR & <span class="gradient-text">Experimental</span></h2>
+      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8">
+        Next-generation fan experience features in development. We're building the future of esports interaction — augmented reality, immersive content, and experimental engagement systems.
+      </p>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal" style="transition-delay:0.1s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🥽</span>
+        <div class="exp-title">AR Player Cards</div>
+        <div class="exp-desc">Scan a physical CKS card to reveal a 3D animated player profile with real-time stats overlaid in augmented reality. Compatible with iOS and Android.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.2s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🎮</span>
+        <div class="exp-title">VR Watch Party</div>
+        <div class="exp-desc">Watch live CKS matches in a virtual arena alongside other fans. Spatial audio, real-time reactions, and a social layer built natively for VR headsets.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.3s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🤖</span>
+        <div class="exp-title">AI Match Predictor</div>
+        <div class="exp-desc">Our AI system will analyze team performance data to generate live win-probability predictions, momentum charts, and post-match breakdowns.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.4s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🌐</span>
+        <div class="exp-title">3D Arena Viewer</div>
+        <div class="exp-desc">An interactive 3D Rocket League arena experience embedded in the browser. Explore our virtual home court, view match replays in spatial context, and interact with team data.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.5s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">🏅</span>
+        <div class="exp-title">Fan Achievement System</div>
+        <div class="exp-desc">Earn badges and unlock exclusive content by engaging with CKS milestones — first match watch, early signup, community contributions, and more.</div>
+      </div>
+      <div class="exp-card reveal" style="transition-delay:0.6s">
+        <div class="exp-glow"></div>
+        <span class="exp-icon">📊</span>
+        <div class="exp-title">Live Analytics Overlay</div>
+        <div class="exp-desc">A real-time streaming overlay integrating live player stats, positioning data, and AI-generated insights for broadcast-grade match coverage.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer>
   <div class="footer-grid">
@@ -2796,7 +3028,7 @@ We are not a casual team. We are a competitive entity in development — recruit
     </div>
   </div>
 </footer>
-
+<script>
 // ═══════════════════════════════ CURSOR ═══════════════════════════════
 const cursor = document.getElementById('cursor');
 const cursorTrail = document.getElementById('cursor-trail');
@@ -3031,91 +3263,6 @@ function scrollToContact() {
   document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
 }
 
-// ═══════════════════════════════ AI CHATBOT ═══════════════════════════════
-const chatToggle = document.getElementById('chatToggle');
-const chatWindow = document.getElementById('chatWindow');
-const chatMessages = document.getElementById('chatMessages');
-const chatInput = document.getElementById('chatInput');
-
-function toggleChat() {
-  chatWindow.classList.toggle('open');
-  if (chatWindow.classList.contains('open')) chatInput.focus();
-}
-chatToggle.addEventListener('click', toggleChat);
-
-const botResponses = {
-  'tryout': "To try out for CKS Esports, scroll to the Recruitment section and fill out the application form. Include your in-game tag, rank, platform, Discord, and any gameplay clips. We review all applications and respond within 5–7 days. 🎯",
-  'roster': "Our current Season 1 roster features:\n• SaucyRL (#01 — Attacker)\n• Nexus (#02 — Midfielder)\n• Nexus (#03 — Defender)\n\nWe also have an open substitute slot. Interested? Apply in the Tryouts section. ⚡",
-  'sponsor': "We're actively seeking founding sponsors! Early partnerships offer great visibility in a growing esports community. Email sponsors@cksesports.com or scroll to the Sponsors section to see partnership tiers. We'd love to talk. 💼",
-  'schedule': "We're in Season 1 formation — our competitive calendar is being finalized. Check the Schedule section for the latest. Follow our social channels for match announcements when they drop. 📅",
-  'merch': "Our store is coming soon! Drop your email in the Merch section to be the first notified — early supporters may get exclusive launch discounts. 👕",
-  'discord': "Our Discord server is coming soon. Follow our socials for the invite link when it launches. We'll post it everywhere. 💬",
-  'contact': "You can reach us at contact@cksesports.com for general inquiries, or sponsors@cksesports.com for partnership opportunities. We respond to all serious messages. ✉️",
-  'default': "Good question! I'm built to help with CKS info — roster, tryouts, sponsors, schedule, and more. Try asking something specific, or head to our Contact section for direct help. 🤖"
-};
-
-function getBotReply(msg) {
-  const m = msg.toLowerCase();
-  if (m.includes('try') || m.includes('join') || m.includes('apply')) return botResponses.tryout;
-  if (m.includes('roster') || m.includes('player') || m.includes('who')) return botResponses.roster;
-  if (m.includes('sponsor') || m.includes('partner') || m.includes('brand')) return botResponses.sponsor;
-  if (m.includes('schedule') || m.includes('match') || m.includes('compet') || m.includes('when')) return botResponses.schedule;
-  if (m.includes('merch') || m.includes('store') || m.includes('shirt') || m.includes('apparel')) return botResponses.merch;
-  if (m.includes('discord') || m.includes('community')) return botResponses.discord;
-  if (m.includes('contact') || m.includes('email') || m.includes('reach')) return botResponses.contact;
-  return botResponses.default;
-}
-
-function addMessage(text, isUser) {
-  const msg = document.createElement('div');
-  msg.className = 'chat-msg' + (isUser ? ' user' : '');
-  msg.innerHTML = `
-    <div class="chat-msg-avatar">${isUser ? '👤' : '⚡'}</div>
-    <div class="chat-bubble">${text.replace(/\n/g,'<br>')}</div>
-  `;
-  chatMessages.appendChild(msg);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function showTyping() {
-  const t = document.createElement('div');
-  t.className = 'chat-msg'; t.id = 'typing';
-  t.innerHTML = '<div class="chat-msg-avatar">⚡</div><div class="chat-bubble"><div class="chat-typing"><span></span><span></span><span></span></div></div>';
-  chatMessages.appendChild(t);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-function removeTyping() { const t = document.getElementById('typing'); if(t) t.remove(); }
-
-function sendChat() {
-  const msg = chatInput.value.trim();
-  if (!msg) return;
-  addMessage(msg, true);
-  chatInput.value = '';
-  document.getElementById('chatSuggestions').style.display = 'none';
-  showTyping();
-  setTimeout(() => {
-    removeTyping();
-    addMessage(getBotReply(msg), false);
-  }, 900 + Math.random() * 600);
-}
-
-function quickChat(msg) {
-  chatInput.value = msg;
-  sendChat();
-}
-
-// ═══════════════════════════════ STAT BARS ON SCROLL ═══════════════════════════════
-const statObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('.stat-bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.width || '0%';
-      });
-    }
-  });
-}, { threshold: 0.3 });
-const statsSection = document.getElementById('stats');
-if (statsSection) statObs.observe(statsSection);
 
 // ═══════════════════════════════ DYNAMIC BG COLOR SHIFT ═══════════════════════════════
 let hue = 185;
