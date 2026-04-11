@@ -622,145 +622,152 @@ section { position: relative; z-index: 1; }
   margin: 0;
 }
 
-/* ═══════════════════════════════ ROSTER ═══════════════════════════════ */
+
+/* ═══════════════════════════════ ROSTER (6:7 Ratio + 5% Bigger) ═══════════════════════════════ */
+
 #roster {
-  padding: 140px 48px;
+  padding: 120px 48px;
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 50%, var(--bg) 100%);
 }
+
+/* Header */
 .roster-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
+
+/* Grid — 5% bigger cards still fit 4 columns */
 .roster-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
-  max-width: 1300px;
+  max-width: 1250px;
   margin: 0 auto;
 }
+
+/* Player Card */
 .player-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 0;
+  background: #0d0d0d;
+  border-radius: 15px; /* slightly bigger */
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 0 16px rgba(0,0,0,0.45);
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
   cursor: pointer;
-  transform-style: preserve-3d;
   position: relative;
 }
+
 .player-card:hover {
+  transform: translateY(-8px) scale(1.025);
   border-color: var(--accent);
-  box-shadow: var(--glow), 0 24px 80px rgba(0,0,0,0.6);
-  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 0 22px rgba(0,240,255,0.25), 0 22px 70px rgba(0,0,0,0.7);
 }
+
+/* Lighting overlay */
 .player-card::before {
   content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(0,240,255,0.06) 0%, transparent 60%);
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,240,255,0.08), transparent 60%);
   opacity: 0;
-  transition: opacity 0.4s;
-  border-radius: 16px;
+  transition: opacity 0.35s;
 }
-.player-card:hover::before { opacity: 1; }
-.player-card-top {
-  background: linear-gradient(180deg, rgba(0,240,255,0.12) 0%, transparent 100%);
-  padding: 40px 24px 24px;
-  text-align: center;
+
+.player-card:hover::before {
+  opacity: 1;
+}
+
+/* Image Top — 6:7 ratio */
+.player-image {
+  width: 100%;
+  aspect-ratio: 6 / 7; /* NEW RATIO */
+  overflow: hidden;
   position: relative;
 }
-.player-number {
-  position: absolute; top: 16px; left: 16px;
+
+.player-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .45s ease;
+}
+
+.player-card:hover .player-image img {
+  transform: scale(1.06);
+}
+
+/* Info Section */
+.player-info {
+  padding: 15px; /* slightly bigger */
+  text-align: left;
+}
+
+.player-info h3 {
+  margin: 0;
+  font-size: 1.10rem; /* +5% */
   font-family: var(--font-display);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: rgba(0,240,255,0.4);
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  color: white;
 }
-.player-avatar {
-  width: 100px; height: 100px;
-  border-radius: 50%;
-  margin: 0 auto 16px;
-  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
-  border: 2px solid var(--glass-border);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.5rem;
-  position: relative;
-  transition: all 0.4s;
-}
-.player-card:hover .player-avatar {
-  border-color: var(--accent);
-  box-shadow: 0 0 30px rgba(0,240,255,0.4);
-  transform: scale(1.08);
-}
-.player-avatar-empty {
-  background: rgba(255,255,255,0.02);
-  border-style: dashed;
-}
-.player-tag {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 900;
-  letter-spacing: 0.05em;
-  color: var(--white);
-  margin-bottom: 4px;
-}
-.player-card-body {
-  padding: 20px 24px 28px;
-  border-top: 1px solid var(--glass-border);
-}
-.player-role-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: rgba(0,240,255,0.1);
-  border: 1px solid rgba(0,240,255,0.2);
-  border-radius: 100px;
-  padding: 4px 14px;
-  font-family: var(--font-display);
-  font-size: 0.55rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: 16px;
-}
-.player-role-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
-.player-social {
-  display: flex; gap: 10px;
-  margin-top: 20px;
-}
-.player-social a {
-  width: 34px; height: 34px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 6px;
-  display: flex; align-items: center; justify-content: center;
+
+/* Role */
+.player-role {
+  margin: 7px 0 13px;
   color: var(--gray);
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: all 0.3s;
+  font-size: 0.82rem; /* +5% */
+  font-family: var(--font-clean);
 }
+
+/* Social Icons */
+.player-social {
+  display: flex;
+  gap: 11px;
+  margin-top: 11px;
+}
+
+.player-social a {
+  width: 32px;  /* +5% */
+  height: 32px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  font-size: 1.0rem; /* +5% */
+  transition: all 0.25s ease;
+}
+
 .player-social a:hover {
   color: var(--accent);
   border-color: var(--accent);
-  box-shadow: 0 0 12px rgba(0,240,255,0.3);
+  box-shadow: 0 0 12px rgba(0,240,255,0.35);
+  transform: translateY(-3px);
 }
-.player-empty-slot {
-  opacity: 0.4;
-}
-.slot-coming-soon {
-  display: flex; align-items: center; gap: 8px;
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gray);
-}
-.slot-pulse { width: 6px; height: 6px; background: var(--gray); border-radius: 50%; animation: statusPulse 2s infinite; }
 
+/* Responsive */
+@media (max-width: 1100px) {
+  .roster-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .roster-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .roster-grid {
+    grid-template-columns: 1fr;
+  }
+}
 /* ═══════════════════════════════ NEWS ═══════════════════════════════ */
 #news {
   padding: 140px 48px;
@@ -2285,99 +2292,78 @@ We are not a casual team. We are a competitive entity in development — recruit
       Our active competitive roster for CKS ESPORTS.
     </p>
   </div>
+
   <div class="roster-grid">
 
-    <!-- Player 1: SaucyRL -->
+    <!-- Player 1 -->
     <div class="player-card reveal" style="transition-delay:0.1s" data-tilt>
-      <div class="player-card-top">
-        <div class="player-number">#01</div>
-        <div class="player-avatar">🎮</div>
-        <div class="player-tag">SaucyRL</div>
+      <div class="player-image">
+        <img src="SaucyRLFX.png" alt="SaucyRL">
       </div>
-      <div class="player-card-body">
-        <div class="player-role-badge">
-          <span class="player-role-dot"></span>
-          Player 1
-        </div>
-        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
-        </div>
+      <div class="player-info">
+        <h3>#01 — SaucyRL</h3>
+        <p class="player-role">PLAYER 1</p>
         <div class="player-social">
-          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
-          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
-          <a href="#" title="Discord" aria-label="Discord">◈</a>
+          <a href="#">𝕏</a>
+          <a href="#">▶</a>
+          <a href="#">◈</a>
         </div>
       </div>
     </div>
 
-    <!-- Player 2: Nexus -->
+    <!-- Player 2 -->
     <div class="player-card reveal" style="transition-delay:0.2s" data-tilt>
-      <div class="player-card-top">
-        <div class="player-number">#02</div>
-        <div class="player-avatar">⚡</div>
-        <div class="player-tag">Nexus</div>
+      <div class="player-image">
+        <img src="Nexus.png" alt="Nexus">
       </div>
-      <div class="player-card-body">
-        <div class="player-role-badge">
-          <span class="player-role-dot"></span>
-          Player 2
-        </div>
-        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
-        </div>
+      <div class="player-info">
+        <h3>#02 — Nexus</h3>
+        <p class="player-role">PLAYER 2</p>
         <div class="player-social">
-          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
-          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
-          <a href="#" title="Discord" aria-label="Discord">◈</a>
+          <a href="#">𝕏</a>
+          <a href="#">▶</a>
+          <a href="#">◈</a>
         </div>
       </div>
     </div>
 
-    <!-- Player 3: Ar4nRL -->
+    <!-- Player 3 -->
     <div class="player-card reveal" style="transition-delay:0.3s" data-tilt>
-      <div class="player-card-top">
-        <div class="player-number">#03</div>
-        <div class="player-avatar">🛡️</div>
-        <div class="player-tag">Ar4nRL</div>
+      <div class="player-image">
+        <img src="Ar4nRL.jpg" alt="Ar4nRL">
       </div>
-      <div class="player-card-body">
-        <div class="player-role-badge">
-          <span class="player-role-dot"></span>
-          Player 3
-        </div>
-        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
-        </div>
+      <div class="player-info">
+        <h3>#03 — Ar4nRL</h3>
+        <p class="player-role">PLAYER 3</p>
         <div class="player-social">
-          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
-          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
-          <a href="#" title="Discord" aria-label="Discord">◈</a>
+          <a href="#">𝕏</a>
+          <a href="#">▶</a>
+          <a href="#">◈</a>
         </div>
       </div>
     </div>
 
-    <!-- Player 4: KuraiRL -->
-    <div class="player-card reveal" style="transition-delay:0.3s" data-tilt>
-      <div class="player-card-top">
-        <div class="player-number">#04</div>
-        <div class="player-avatar">⚔️</div>
-        <div class="player-tag">KuraiRL</div>
+    <!-- Player 4 -->
+    <div class="player-card reveal" style="transition-delay:0.4s" data-tilt>
+      <div class="player-image">
+        <img src="KuraiRL.jpg" alt="KuraiRL">
       </div>
-      <div class="player-card-body">
-        <div class="player-role-badge">
-          <span class="player-role-dot"></span>
-          Player 4
-        </div>
-        <div style="font-family:var(--font-clean);font-size:0.82rem;color:var(--gray);line-height:1.7;margin-bottom:8px">
-        </div>
+      <div class="player-info">
+        <h3>#04 — KuraiRL</h3>
+        <p class="player-role">PLAYER 4</p>
         <div class="player-social">
-          <a href="#" title="Twitter / X" aria-label="Twitter">𝕏</a>
-          <a href="#" title="Twitch" aria-label="Twitch">▶</a>
-          <a href="#" title="Discord" aria-label="Discord">◈</a>
+          <a href="#">𝕏</a>
+          <a href="#">▶</a>
+          <a href="#">◈</a>
         </div>
       </div>
     </div>
 
+  </div>
 </section>
 
 <div class="section-divider"></div>
+
 
 <!-- ══════════════ NEWS ══════════════ -->
 <section id="news">
