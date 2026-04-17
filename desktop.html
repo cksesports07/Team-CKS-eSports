@@ -772,10 +772,15 @@ section { position: relative; z-index: 1; }
 #news {
   padding: 140px 48px;
 }
+
 .news-header {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  max-width: 1300px; margin: 0 auto 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: 0 auto 60px;
 }
+
 .news-grid {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr;
@@ -783,6 +788,7 @@ section { position: relative; z-index: 1; }
   max-width: 1300px;
   margin: 0 auto;
 }
+
 .news-card {
   background: var(--glass);
   border: 1px solid var(--glass-border);
@@ -791,27 +797,38 @@ section { position: relative; z-index: 1; }
   transition: all 0.4s;
   cursor: pointer;
 }
+
 .news-card:hover {
   border-color: var(--accent);
   box-shadow: var(--glow);
   transform: translateY(-6px);
 }
+
+/* NEW IMAGE SYSTEM */
 .news-card-img {
   width: 100%;
   aspect-ratio: 16/9;
-  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(112,0,255,0.1));
-  display: flex; align-items: center; justify-content: center;
-  font-size: 3rem;
-  position: relative;
   overflow: hidden;
+  position: relative;
+  background: #0a0a0a; /* fallback if image fails */
 }
-.news-card-img::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(10,10,10,0.8), transparent);
+
+.news-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
-.news-card.featured .news-card-img { aspect-ratio: 16/7; font-size: 5rem; }
-.news-card-body { padding: 24px; }
+
+/* Featured post has a wider image */
+.news-card.featured .news-card-img {
+  aspect-ratio: 16/7;
+}
+
+.news-card-body {
+  padding: 24px;
+}
+
 .news-category {
   font-family: var(--font-display);
   font-size: 0.55rem;
@@ -821,6 +838,7 @@ section { position: relative; z-index: 1; }
   color: var(--accent);
   margin-bottom: 10px;
 }
+
 .news-card-title {
   font-family: var(--font-display);
   font-size: 1rem;
@@ -830,18 +848,30 @@ section { position: relative; z-index: 1; }
   line-height: 1.4;
   margin-bottom: 10px;
 }
-.news-card.featured .news-card-title { font-size: 1.4rem; }
+
+.news-card.featured .news-card-title {
+  font-size: 1.4rem;
+}
+
 .news-date {
   font-family: var(--font-clean);
   font-size: 0.75rem;
   color: var(--gray);
 }
+
 .news-placeholder {
   font-family: var(--font-clean);
   font-size: 0.85rem;
   color: var(--gray);
   font-style: italic;
   line-height: 1.7;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .news-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ═══════════════════════════════ SCHEDULE ═══════════════════════════════ */
@@ -953,36 +983,80 @@ section { position: relative; z-index: 1; }
   font-style: italic;
 }
 .schedule-empty-icon { font-size: 3rem; margin-bottom: 20px; display: block; opacity: 0.4; }
-
 /* ═══════════════════════════════ LIVE / STREAMS ═══════════════════════════════ */
 #live {
   padding: 140px 48px;
 }
+
+/* Grid layout */
 .streams-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 420px;
   gap: 40px;
-  max-width: 1300px; margin: 0 auto;
+  max-width: 1300px;
+  margin: 0 auto;
   align-items: start;
 }
+
+@media (max-width: 980px) {
+  .streams-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Main stream card */
 .stream-main {
   background: var(--glass);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
+
+/* Preview area */
 .stream-preview {
+  position: relative;
   aspect-ratio: 16/9;
   background: linear-gradient(135deg, #0a0a14, #0d0d20);
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
 }
-.stream-offline-msg {
-  text-align: center;
+
+/* Twitch iframe container */
+.twitch-embed {
+  width: 100%;
+  height: 100%;
+  display: block; /* always visible when JS injects iframe */
+  position: relative;
   z-index: 2;
 }
-.stream-offline-icon { font-size: 4rem; margin-bottom: 16px; display: block; opacity: 0.3; }
+
+/* Offline placeholder (hidden when live) */
+.stream-offline-msg {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+  padding: 24px;
+  color: var(--white);
+  z-index: 3;
+  background: rgba(0,0,0,0.35);
+  backdrop-filter: blur(4px);
+}
+
+.stream-offline-icon {
+  font-size: 4rem;
+  opacity: 0.9;
+  margin-bottom: 8px;
+}
+
 .stream-offline-text {
   font-family: var(--font-display);
   font-size: 0.7rem;
@@ -991,75 +1065,154 @@ section { position: relative; z-index: 1; }
   text-transform: uppercase;
   color: var(--gray);
 }
+
+/* Scan line */
 .stream-scan-line {
-  position: absolute; left: 0; right: 0;
+  position: absolute;
+  left: 0;
+  right: 0;
   height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(0,240,255,0.3), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,240,255,0.12), transparent);
   animation: scanLine 4s linear infinite;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 4;
 }
-@keyframes scanLine {
-  0% { top: 0; opacity: 1; }
-  100% { top: 100%; opacity: 0; }
-}
+
+/* Footer */
 .stream-footer {
-  padding: 20px 24px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-top: 1px solid rgba(255,255,255,0.03);
 }
+
 .stream-channel {
   font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--white);
+}
+
+.stream-channel span {
+  display: block;
+  font-family: var(--font-clean);
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin-top: 4px;
+}
+
+/* Match status */
+.match-status {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-family: var(--font-clean);
   font-size: 0.8rem;
   font-weight: 700;
-  color: var(--white);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
-.stream-channel span { display: block; font-size: 0.6rem; color: var(--gray); margin-top: 2px; font-weight: 400; }
+
+.status-tbd {
+  background: rgba(255,255,255,0.03);
+  color: var(--gray);
+}
+
+.status-live {
+  background: linear-gradient(90deg, #ff4d4d, #ff9a4d);
+  color: #0b0b0b;
+  box-shadow: 0 8px 24px rgba(255,77,77,0.12);
+}
+
+/* Player channels column */
 .stream-channels {
-  display: flex; flex-direction: column; gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
+
+/* Stream card */
 .stream-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
   border-radius: 12px;
-  padding: 20px 24px;
-  display: flex; align-items: center; gap: 20px;
-  transition: all 0.3s;
-  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s ease;
 }
+
 .stream-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 20px rgba(0,240,255,0.1);
+  background: rgba(255,255,255,0.02);
+  transform: translateY(-4px);
 }
-.stream-avatar {
-  width: 48px; height: 48px;
-  background: linear-gradient(135deg, rgba(0,240,255,0.2), rgba(112,0,255,0.2));
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
+
+/* Avatar wrapper */
+.stream-avatar-link {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  overflow: hidden;
+  flex: 0 0 56px;
+  border: 1px solid rgba(255,255,255,0.04);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.2));
+  text-decoration: none;
+}
+
+.stream-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Placeholder avatar */
+.placeholder-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.02);
   font-size: 1.4rem;
-  flex-shrink: 0;
-  border: 1px solid var(--glass-border);
 }
-.stream-info { flex: 1; }
+
+/* Stream info */
+.stream-info {
+  display: flex;
+  flex-direction: column;
+}
+
 .stream-name {
   font-family: var(--font-display);
-  font-size: 0.85rem;
   font-weight: 700;
+  font-size: 0.95rem;
   color: var(--white);
-  margin-bottom: 4px;
 }
+
 .stream-platform {
   font-family: var(--font-clean);
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   color: var(--gray);
+  margin-top: 4px;
 }
-.stream-badge-offline {
-  font-family: var(--font-display);
-  font-size: 0.5rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--gray);
-  padding: 4px 10px;
-  border-radius: 100px;
-  border: 1px solid var(--gray2);
+
+.stream-platform a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* Scan line animation */
+@keyframes scanLine {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10% { opacity: 0.6; }
+  50% { transform: translateX(100%); opacity: 0.6; }
+  90% { opacity: 0; }
+  100% { transform: translateX(100%); opacity: 0; }
 }
 
 /* ═══════════════════════════════ STATS ═══════════════════════════════ */
@@ -1386,106 +1539,6 @@ section { position: relative; z-index: 1; }
   line-height: 1.8;
 }
 
-/* ═══════════════════════════════ RECRUITMENT ═══════════════════════════════ */
-#recruitment {
-  padding: 140px 48px;
-  background: var(--bg2);
-}
-.recruitment-container {
-  max-width: 1300px; margin: 0 auto;
-  display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px;
-  align-items: start;
-}
-.recruitment-info {}
-.recruitment-reqs {
-  display: flex; flex-direction: column; gap: 16px;
-  margin-top: 36px;
-}
-.req-item {
-  display: flex; align-items: flex-start; gap: 16px;
-  padding: 16px 20px;
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-}
-.req-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 2px; }
-.req-text {
-  font-family: var(--font-clean);
-  font-size: 0.9rem;
-  color: var(--gray);
-  line-height: 1.6;
-}
-.req-text strong { color: var(--white); font-family: var(--font-display); letter-spacing: 0.05em; }
-
-.tryout-form {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 40px;
-}
-.tryout-form-title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  color: var(--white);
-  margin-bottom: 32px;
-}
-.form-group { margin-bottom: 20px; }
-.form-label {
-  font-family: var(--font-display);
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 8px;
-}
-.form-input, .form-select, .form-textarea {
-  width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--glass-border);
-  border-radius: 6px;
-  padding: 14px 16px;
-  color: var(--white);
-  font-family: var(--font-clean);
-  font-size: 0.9rem;
-  outline: none;
-  transition: all 0.3s;
-  -webkit-appearance: none;
-}
-.form-input:focus, .form-select:focus, .form-textarea:focus {
-  border-color: var(--accent);
-  background: rgba(0,240,255,0.04);
-  box-shadow: 0 0 16px rgba(0,240,255,0.1);
-}
-.form-input::placeholder, .form-textarea::placeholder { color: var(--gray2); }
-.form-select option { background: var(--bg3); }
-.form-textarea { height: 100px; resize: vertical; }
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.form-submit {
-  width: 100%;
-  background: var(--accent);
-  color: var(--bg);
-  font-family: var(--font-display);
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  padding: 18px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-top: 8px;
-  transition: all 0.3s;
-  box-shadow: 0 0 30px rgba(0,240,255,0.3);
-}
-.form-submit:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 60px rgba(0,240,255,0.5);
-}
-
 /* ═══════════════════════════════ COMMUNITY ═══════════════════════════════ */
 #community {
   padding: 140px 48px;
@@ -1725,67 +1778,6 @@ section { position: relative; z-index: 1; }
   line-height: 1.8;
   border-top: 1px solid var(--glass-border);
   padding-top: 16px;
-}
-
-/* ═══════════════════════════════ AR / VR / EXPERIMENTAL ═══════════════════════════════ */
-#experimental {
-  padding: 140px 48px;
-  background: var(--bg2);
-}
-.exp-container { max-width: 1300px; margin: 0 auto; }
-.exp-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-top: 60px;
-}
-.exp-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 40px 32px;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.4s;
-}
-.exp-card:hover {
-  border-color: var(--accent);
-  box-shadow: var(--glow);
-  transform: translateY(-8px);
-}
-.exp-card::after {
-  content: 'COMING SOON';
-  position: absolute; top: 16px; right: 16px;
-  font-family: var(--font-display);
-  font-size: 0.45rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  color: var(--gray2);
-  padding: 4px 10px;
-  border: 1px solid var(--gray2);
-  border-radius: 100px;
-}
-.exp-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
-.exp-title {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--white);
-  margin-bottom: 12px;
-}
-.exp-desc {
-  font-family: var(--font-clean);
-  font-size: 0.85rem;
-  color: var(--gray);
-  line-height: 1.7;
-}
-.exp-glow {
-  position: absolute; bottom: -40px; right: -40px;
-  width: 150px; height: 150px;
-  background: radial-gradient(circle, rgba(0,240,255,0.1), transparent);
-  pointer-events: none;
 }
 
 /* ═══════════════════════════════ FOOTER ═══════════════════════════════ */
@@ -2120,7 +2112,7 @@ footer {
   .hamburger { display: flex; }
   #hero { padding: calc(var(--nav-h) + 20px) 24px 100px; }
   section { padding-left: 24px; padding-right: 24px; }
-  #about, #roster, #news, #schedule, #live, #stats, #media, #merch, #sponsors, #recruitment, #community, #achievements, #contact, #experimental { padding-left: 24px; padding-right: 24px; }
+  #about, #roster, #news, #schedule, #live, #stats, #media, #merch, #sponsors, #recruitment, #community, #achievements, #contact { padding-left: 24px; padding-right: 24px; }
   .streams-grid { grid-template-columns: 1fr; }
   .recruitment-container { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; }
@@ -2266,13 +2258,9 @@ footer {
     <div class="about-content reveal-right">
       <div class="section-label">About CKS</div>
       <h2 class="section-title"><span class="gradient-text">═══════════════════════════════════════</span></h2>
-      <p class="about-body">
-        CKS Esports was founded with a clear directive: build a Rocket League organization that operates with the discipline, structure, and ambition of the world's top esports brands.
-      </p>
-      <p class="about-body">
-       CKS Esports was founded with a clear directive: establish a Rocket League organization that operates with the discipline, structure, and standards expected of top‑tier esports programs.
 
-We are not a casual team. We are a competitive entity in development — recruiting the right players, building the right systems, and preparing to enter structured competition with intent. Every decision, from roster construction to brand identity, is made with long‑term competitive stability in mind.
+      <p class="about-body">
+CKS Esports was founded to build a Rocket League team that is serious about it's competitive standards. We operate as a developing competitive program, focused on improving and reaching competitive tiers like ECS and RLCS Open Qualifiers. Every decision is made with long‑term stability and performance in mind.
       </p>
              </div>
       </div>
@@ -2286,10 +2274,7 @@ We are not a casual team. We are a competitive entity in development — recruit
 <section id="roster">
   <div class="roster-header reveal">
     <div class="section-label" style="justify-content:center">ROSTER</div>
-    <h2 class="section-title">Official <span class="gradient-text">Roster</span></h2>
-    <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:500px;margin:0 auto">
-      Our active competitive roster for CKS ESPORTS.
-    </p>
+    <h2 class="section-title">Meet the <span class="gradient-text">team...</span></h2>
   </div>
 
   <div class="roster-grid">
@@ -2302,11 +2287,7 @@ We are not a casual team. We are a competitive entity in development — recruit
       <div class="player-info">
         <h3>#01 — SaucyRL</h3>
         <p class="player-role">PLAYER 1</p>
-        <div class="player-social">
-          <a href="#">𝕏</a>
-          <a href="#">▶</a>
-          <a href="#">◈</a>
-        </div>
+
       </div>
     </div>
 
@@ -2318,45 +2299,19 @@ We are not a casual team. We are a competitive entity in development — recruit
       <div class="player-info">
         <h3>#02 — Nexus</h3>
         <p class="player-role">PLAYER 2</p>
-        <div class="player-social">
-          <a href="#">𝕏</a>
-          <a href="#">▶</a>
-          <a href="#">◈</a>
-        </div>
       </div>
     </div>
 
     <!-- Player 3 -->
     <div class="player-card reveal" style="transition-delay:0.3s" data-tilt>
       <div class="player-image">
-        <img src="Ar4nRL.jpg" alt="Ar4nRL">
+        <img src="SunnyRL.jpg" alt="Ar4nRL">
       </div>
       <div class="player-info">
-        <h3>#03 — Ar4nRL</h3>
+        <h3>#03 — SunnyRL</h3>
         <p class="player-role">PLAYER 3</p>
-        <div class="player-social">
-          <a href="#">𝕏</a>
-          <a href="#">▶</a>
-          <a href="#">◈</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Player 4 -->
-    <div class="player-card reveal" style="transition-delay:0.4s" data-tilt>
-      <div class="player-image">
-        <img src="KuraiRL.jpg" alt="KuraiRL">
-      </div>
-      <div class="player-info">
-        <h3>#04 — KuraiRL</h3>
-        <p class="player-role">PLAYER 4</p>
-        <div class="player-social">
-          <a href="#">𝕏</a>
-          <a href="#">▶</a>
-          <a href="#">◈</a>
-        </div>
-      </div>
-    </div>
+</div>
+</div>
 
   </div>
 </section>
@@ -2370,95 +2325,29 @@ We are not a casual team. We are a competitive entity in development — recruit
     <div>
       <div class="section-label">Latest Updates</div>
       <h2 class="section-title">News & <span class="gradient-text">Articles</span></h2>
-    </div>
-    <a href="#" class="btn-secondary" style="font-size:0.6rem;padding:10px 24px">View All Posts →</a>
-  </div>
+
   <div class="news-grid" style="max-width:1300px;margin:0 auto">
+
+    <!-- FEATURED POST -->
     <div class="news-card featured reveal">
-      <div class="news-card-img">📢</div>
+      <div class="news-card-img">
+        <img src="SaucyRLFX.png" alt="CKS Launch">
+      </div>
       <div class="news-card-body">
         <div class="news-category">Organization</div>
         <div class="news-card-title">CKS Esports Officially Launches</div>
-        <div class="news-placeholder">CKS Esports is proud to announce our official launch as a Rocket League esports organization. Our founding roster is set and we are actively preparing for structured competition. Stay tuned for upcoming announcements regarding our competitive schedule and future plans.</div>
+        <div class="news-placeholder">
+          CKS Esports is proud to announce our official launch as a Rocket League esports organization. Our founding roster is set and we are actively preparing for structured competition. Stay tuned for upcoming announcements regarding our competitive schedule and future plans.
+        </div>
         <div class="news-date" style="margin-top:16px">April 2026 · Organizational Announcement</div>
       </div>
     </div>
-    <div class="news-card reveal" style="transition-delay:0.15s">
-      <div class="news-card-img" style="font-size:2rem">🎮</div>
-      <div class="news-card-body">
-        <div class="news-category">Roster</div>
-        <div class="news-card-title">Roster Confirmed</div>
-        <div class="news-placeholder">Our active Season 1 lineup featuring SaucyRL and Nexus has been confirmed. The search for a substitute continues.</div>
-        <div class="news-date" style="margin-top:12px">Season 1 · Roster News</div>
-      </div>
-    </div>
-    <div class="news-card reveal" style="transition-delay:0.3s">
-      <div class="news-card-img" style="font-size:2rem">📋</div>
-      <div class="news-card-body">
-        <div class="news-category">Tryouts</div>
-        <div class="news-card-title">Substitute Tryouts Are Now Open</div>
-        <div class="news-placeholder">CKS Esports is actively scouting for a substitute player. If you have what it takes, submit your application through our Tryouts page.</div>
-        <div class="news-date" style="margin-top:12px">Season 1 · Recruitment</div>
-      </div>
-    </div>
+
   </div>
 </section>
 
 <div class="section-divider"></div>
 
-<!-- ══════════════ SCHEDULE / MATCHES ══════════════ -->
-<section id="schedule">
-  <div class="schedule-container">
-    <div class="reveal">
-      <div class="section-label">Calendar</div>
-      <h2 class="section-title">Schedule & <span class="gradient-text">Matches</span></h2>
-      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8;max-width:600px;margin-bottom:48px">
-        Our competitive calendar. Match dates and tournament entries will be posted here as they are confirmed.
-      </p>
-    </div>
-    <div class="schedule-tabs reveal">
-      <button class="tab-btn active" onclick="switchTab(this,'upcoming')">Upcoming</button>
-      <button class="tab-btn" onclick="switchTab(this,'results')">Results</button>
-      <button class="tab-btn" onclick="switchTab(this,'tournaments')">Tournaments</button>
-    </div>
-    <div id="tab-upcoming" class="match-list reveal">
-      <div class="match-card" style="opacity:0.5;pointer-events:none">
-        <div class="match-date-col">
-          <div>TBD</div>
-          <div class="match-time">Time TBD</div>
-        </div>
-        <div class="match-event">
-          First Competitive Match
-          <span>Tournament / League · TBD</span>
-        </div>
-        <div class="match-vs">
-          <div class="match-team cks">CKS</div>
-          <div class="match-vs-label">VS</div>
-          <div class="match-team opp">TBD</div>
-        </div>
-        <div class="match-status status-tbd">TBD</div>
-      </div>
-      <div class="schedule-empty">
-        <span class="schedule-empty-icon">📅</span>
-        No upcoming matches scheduled yet. Check back soon — our first match will be announced shortly.
-      </div>
-    </div>
-    <div id="tab-results" class="match-list reveal" style="display:none">
-      <div class="schedule-empty">
-        <span class="schedule-empty-icon">🏁</span>
-        No results yet. Season 1 hasn't started. Our match history will be archived here as we compete.
-      </div>
-    </div>
-    <div id="tab-tournaments" class="match-list reveal" style="display:none">
-      <div class="schedule-empty">
-        <span class="schedule-empty-icon">🏆</span>
-        No tournament entries confirmed yet. We are actively evaluating competitions to enter. Announcements coming soon.
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
 
 <!-- ══════════════ LIVE / STREAMS ══════════════ -->
 <section id="live">
@@ -2471,58 +2360,109 @@ We are not a casual team. We are a competitive entity in development — recruit
       </p>
     </div>
   </div>
+
   <div class="streams-grid" style="max-width:1300px;margin:0 auto">
-    <div class="stream-main reveal-left">
-      <div class="stream-preview">
-        <div class="stream-scan-line"></div>
-        <div class="stream-offline-msg">
-          <span class="stream-offline-icon">📡</span>
+
+    <!-- MAIN STREAM PREVIEW -->
+    <div class="stream-main reveal-left" aria-live="polite">
+      <div class="stream-preview" id="cks-stream-preview" data-twitch-channel="team_cks">
+
+        <!-- Twitch embed (iframe) -->
+        <!-- NOTE: change parent=cksesports07.github.io to your actual host domain if different -->
+        <div id="twitch-embed" class="twitch-embed" aria-hidden="false">
+          <iframe
+            src="https://player.twitch.tv/?channel=team_cks&parent=cksesports07.github.io"
+            title="team_cks live stream"
+            width="100%"
+            height="100%"
+            frameborder="0"
+            allowfullscreen="true"
+            scrolling="no"
+            aria-label="Twitch live player for team_cks">
+          </iframe>
+
+          <noscript>
+            <div style="padding:18px;text-align:center;background:#000;color:#fff;">
+              Live player requires JavaScript. <a href="https://www.twitch.tv/team_cks" target="_blank" rel="noopener noreferrer" style="color:#00f0ff;text-decoration:underline;">Open team_cks on Twitch</a>
+            </div>
+          </noscript>
+        </div>
+
+        <!-- Offline placeholder (keeps visual when you prefer not to show iframe) -->
+        <div class="stream-offline-msg" id="cks-offline-placeholder" role="status" aria-hidden="true">
+          <span class="stream-offline-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill="#fff" d="M3.28 2.22a.75.75 0 0 0-1.06 1.06l2.889 2.89a9.5 9.5 0 0 0-1.77 1.393a10 10 0 0 0-1.104 1.338a.75.75 0 1 0 1.233.855A8.4 8.4 0 0 1 4.4 8.624a8 8 0 0 1 1.807-1.357l.965.966A6.4 6.4 0 0 0 5.48 9.45a6.4 6.4 0 0 0-1.192 1.644a.75.75 0 0 0 1.338.677q.353-.697.914-1.26c.52-.52 1.126-.9 1.773-1.14l1.281 1.282a4.1 4.1 0 0 0-2.48 1.186a4.1 4.1 0 0 0-.86 1.274a.75.75 0 1 0 1.374.6c.136-.31.32-.586.547-.813a2.63 2.63 0 0 1 3.376-.29l5.17 5.17a.75.75 0 1 0 1.06-1.061zm8.088 7.026a4.9 4.9 0 0 1 2.161 1.266c.359.358.676.803.918 1.275a.75.75 0 1 0 1.335-.683a6.6 6.6 0 0 0-1.192-1.653a6.43 6.43 0 0 0-4.896-1.878zM8.55 6.43a7.96 7.96 0 0 1 8.06 3.33a.75.75 0 1 0 1.235-.852A9.47 9.47 0 0 0 7.31 5.188zm2.371 9.21a1.242 1.242 0 1 0-1.757-1.757a1.242 1.242 0 0 0 1.757 1.757"/>
+            </svg>
+          </span>
+
           <div class="stream-offline-text">No Active Broadcast</div>
+
           <div style="font-family:var(--font-clean);font-size:0.8rem;color:rgba(138,138,154,0.5);margin-top:8px;font-style:italic">
             CKS Live will appear here during events
           </div>
         </div>
+
+        <!-- Optional subtle scan line / visual effect -->
+        <div class="stream-scan-line" aria-hidden="true"></div>
       </div>
+
       <div class="stream-footer">
         <div class="stream-channel">
           CKS Esports Official
           <span>Follow for live match coverage</span>
         </div>
-        <div class="match-status status-tbd">Offline</div>
+
+        <!-- match-status kept for visual, but not "offline" badge -->
+        <div class="match-status status-tbd" id="cks-match-status">Offline</div>
       </div>
     </div>
-    <div class="stream-channels reveal-right">
+
+    <!-- PLAYER CHANNELS -->
+    <aside class="stream-channels reveal-right" aria-label="Player Channels">
       <div style="font-family:var(--font-display);font-size:0.6rem;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:var(--accent);margin-bottom:16px">Player Channels</div>
+
+      <!-- SaucyRL -->
       <div class="stream-card">
-        <div class="stream-avatar">🎮</div>
+        <a class="stream-avatar-link" href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="SaucyRL YouTube">
+          <img class="stream-avatar-img" src="SaucyRLFX.png" alt="SaucyRL">
+        </a>
         <div class="stream-info">
           <div class="stream-name">SaucyRL</div>
-          <div class="stream-platform">Twitch / YouTube · Add links when available</div>
+          <div class="stream-platform">
+            <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a> · Add links when available
+          </div>
         </div>
-        <div class="stream-badge-offline">Offline</div>
       </div>
+
+      <!-- Nexus -->
       <div class="stream-card">
-        <div class="stream-avatar">⚡</div>
+        <a class="stream-avatar-link" href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer" aria-label="Nexus TikTok">
+          <img class="stream-avatar-img" src="Nexus.png" alt="Nexus">
+        </a>
         <div class="stream-info">
           <div class="stream-name">Nexus</div>
-          <div class="stream-platform">Twitch / YouTube · Add links when available</div>
+          <div class="stream-platform">
+            <a href="https://www.tiktok.com/" target="_blank" rel="noopener noreferrer">TikTok</a> · Add links when available
+          </div>
         </div>
-        <div class="stream-badge-offline">Offline</div>
       </div>
+
+      <!-- Placeholder / future player slot -->
       <div class="stream-card">
-        <div class="stream-avatar">🛡️</div>
+        <div class="stream-avatar placeholder-avatar" aria-hidden="true">🛡️</div>
         <div class="stream-info">
-          <div class="stream-name">Nexus</div>
+          <div class="stream-name">TBD</div>
           <div class="stream-platform">Twitch / YouTube · Add links when available</div>
         </div>
-        <div class="stream-badge-offline">Offline</div>
       </div>
+
       <div style="background:var(--glass);border:1px dashed rgba(0,240,255,0.1);border-radius:12px;padding:20px 24px;margin-top:8px">
         <div style="font-family:var(--font-display);font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray2);text-align:center">
           Stream notifications — follow our social channels for live alerts
         </div>
       </div>
-    </div>
+    </aside>
   </div>
 </section>
 
@@ -2916,58 +2856,6 @@ We are not a casual team. We are a competitive entity in development — recruit
 
 <div class="section-divider"></div>
 
-<!-- ══════════════ AR / VR EXPERIMENTAL ══════════════ -->
-<section id="experimental">
-  <div class="exp-container">
-    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto 0">
-      <div class="section-label" style="justify-content:center">Future Tech</div>
-      <h2 class="section-title">AR / VR & <span class="gradient-text">Experimental</span></h2>
-      <p style="font-family:var(--font-clean);color:var(--gray);font-size:0.95rem;line-height:1.8">
-        Next-generation fan experience features in development. We're building the future of esports interaction — augmented reality, immersive content, and experimental engagement systems.
-      </p>
-    </div>
-    <div class="exp-grid">
-      <div class="exp-card reveal" style="transition-delay:0.1s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">🥽</span>
-        <div class="exp-title">AR Player Cards</div>
-        <div class="exp-desc">Scan a physical CKS card to reveal a 3D animated player profile with real-time stats overlaid in augmented reality. Compatible with iOS and Android.</div>
-      </div>
-      <div class="exp-card reveal" style="transition-delay:0.2s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">🎮</span>
-        <div class="exp-title">VR Watch Party</div>
-        <div class="exp-desc">Watch live CKS matches in a virtual arena alongside other fans. Spatial audio, real-time reactions, and a social layer built natively for VR headsets.</div>
-      </div>
-      <div class="exp-card reveal" style="transition-delay:0.3s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">🤖</span>
-        <div class="exp-title">AI Match Predictor</div>
-        <div class="exp-desc">Our AI system will analyze team performance data to generate live win-probability predictions, momentum charts, and post-match breakdowns.</div>
-      </div>
-      <div class="exp-card reveal" style="transition-delay:0.4s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">🌐</span>
-        <div class="exp-title">3D Arena Viewer</div>
-        <div class="exp-desc">An interactive 3D Rocket League arena experience embedded in the browser. Explore our virtual home court, view match replays in spatial context, and interact with team data.</div>
-      </div>
-      <div class="exp-card reveal" style="transition-delay:0.5s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">🏅</span>
-        <div class="exp-title">Fan Achievement System</div>
-        <div class="exp-desc">Earn badges and unlock exclusive content by engaging with CKS milestones — first match watch, early signup, community contributions, and more.</div>
-      </div>
-      <div class="exp-card reveal" style="transition-delay:0.6s">
-        <div class="exp-glow"></div>
-        <span class="exp-icon">📊</span>
-        <div class="exp-title">Live Analytics Overlay</div>
-        <div class="exp-desc">A real-time streaming overlay integrating live player stats, positioning data, and AI-generated insights for broadcast-grade match coverage.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<div class="section-divider"></div>
 
 <!-- ══════════════ FOOTER ══════════════ -->
 <footer>
@@ -3312,6 +3200,157 @@ window.addEventListener('load', () => {
 
 console.log('%cCKS ESPORTS', 'font-size:24px;font-weight:900;color:#00F0FF;');
 console.log('%cBuilt to Compete. Season 1 Forming.', 'font-size:12px;color:#8a8a9a;');
+
+(function () {
+  'use strict';
+
+  // CONFIG
+  const POLL_INTERVAL_MS = 60_000; // how often to refresh live status
+  // If you want to call Helix from the browser (not recommended), fill these.
+  // Recommended: leave blank and proxy Helix server-side.
+  const TWITCH_CLIENT_ID = ''; // optional: 'your-client-id'
+  const TWITCH_APP_TOKEN = ''; // optional: 'your-app-access-token'
+
+  // DOM refs (must match your HTML)
+  const previewRoot = document.getElementById('cks-stream-preview');
+  const twitchEmbedContainer = document.getElementById('twitch-embed');
+  const offlinePlaceholder = document.getElementById('cks-offline-placeholder');
+  const matchStatus = document.getElementById('cks-match-status');
+
+  if (!previewRoot || !twitchEmbedContainer || !offlinePlaceholder || !matchStatus) {
+    console.warn('CKS Stream: required DOM elements not found. Make sure IDs exist.');
+    return;
+  }
+
+  // Channel can be set via data attribute on preview root, fallback to 'team_cks'
+  const TWITCH_CHANNEL = (previewRoot.getAttribute('data-twitch-channel') || 'team_cks').trim();
+
+  // Optional: allow overriding parent param via data attribute (useful for local testing)
+  const EMBED_PARENT = previewRoot.getAttribute('data-embed-parent') || location.hostname;
+
+  // Utility: show offline UI
+  function showOffline() {
+    offlinePlaceholder.style.display = '';
+    twitchEmbedContainer.style.display = 'none';
+    twitchEmbedContainer.innerHTML = '';
+    twitchEmbedContainer.setAttribute('aria-hidden', 'true');
+    offlinePlaceholder.setAttribute('aria-hidden', 'false');
+    matchStatus.textContent = 'Offline';
+    matchStatus.classList && matchStatus.classList.remove('status-live');
+    matchStatus.classList && matchStatus.classList.add('status-tbd');
+  }
+
+  // Utility: show live UI and inject player
+  function showLive() {
+    offlinePlaceholder.style.display = 'none';
+    twitchEmbedContainer.style.display = '';
+    twitchEmbedContainer.setAttribute('aria-hidden', 'false');
+    offlinePlaceholder.setAttribute('aria-hidden', 'true');
+    matchStatus.textContent = 'Live';
+    matchStatus.classList && matchStatus.classList.remove('status-tbd');
+    matchStatus.classList && matchStatus.classList.add('status-live');
+    injectTwitchIframe();
+  }
+
+  // Inject iframe if not already present
+  function injectTwitchIframe() {
+    if (!twitchEmbedContainer) return;
+    if (twitchEmbedContainer.querySelector('iframe')) return;
+
+    // Twitch requires the parent param to match the host where the iframe is embedded
+    const src = 'https://player.twitch.tv/?channel=' + encodeURIComponent(TWITCH_CHANNEL)
+              + '&parent=' + encodeURIComponent(EMBED_PARENT)
+              + '&muted=false&autoplay=false';
+
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.title = TWITCH_CHANNEL + ' live stream';
+    iframe.width = '100%';
+    iframe.height = '100%';
+    iframe.frameBorder = '0';
+    iframe.allowFullscreen = true;
+    iframe.setAttribute('aria-label', TWITCH_CHANNEL + ' Twitch player');
+    // minimal inline sizing fallback
+    iframe.style.minHeight = '320px';
+    iframe.style.display = 'block';
+
+    twitchEmbedContainer.appendChild(iframe);
+  }
+
+  // Try reading /live.json (optional manual override)
+  async function checkLocalLiveJson() {
+    try {
+      const res = await fetch('/live.json', { cache: 'no-store' });
+      if (!res.ok) return null;
+      const data = await res.json();
+      if (typeof data.live === 'boolean') return data.live;
+      return null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Query Twitch Helix for stream status (returns true/false/null)
+  async function checkTwitchHelix() {
+    if (!TWITCH_CLIENT_ID || !TWITCH_APP_TOKEN) return null;
+    const url = 'https://api.twitch.tv/helix/streams?user_login=' + encodeURIComponent(TWITCH_CHANNEL);
+    try {
+      const res = await fetch(url, {
+        headers: {
+          'Client-ID': TWITCH_CLIENT_ID,
+          'Authorization': 'Bearer ' + TWITCH_APP_TOKEN,
+          'Accept': 'application/json'
+        },
+        cache: 'no-store'
+      });
+      if (!res.ok) {
+        console.warn('CKS Stream: Helix returned', res.status);
+        return null;
+      }
+      const json = await res.json();
+      if (json && Array.isArray(json.data) && json.data.length > 0) return true;
+      return false;
+    } catch (err) {
+      console.warn('CKS Stream: Helix error', err);
+      return null;
+    }
+  }
+
+  // Determine live state: local override -> helix -> fallback false
+  async function determineLiveState() {
+    const local = await checkLocalLiveJson();
+    if (local === true) return true;
+    if (local === false) return false;
+
+    const helix = await checkTwitchHelix();
+    if (helix === true) return true;
+    if (helix === false) return false;
+
+    // no reliable info -> offline
+    return false;
+  }
+
+// Main refresh routine (TEMP: always show live)
+async function refresh() {
+  showLive();
+}
+
+
+  // Initial run and polling
+  refresh();
+  const pollHandle = setInterval(refresh, POLL_INTERVAL_MS);
+
+  // Expose a small API for manual control / debugging
+  window.CKSStream = {
+    refresh,
+    forceLive: showLive,
+    forceOffline: showOffline,
+    stopPolling: function () { clearInterval(pollHandle); },
+    getChannel: function () { return TWITCH_CHANNEL; }
+  };
+
+})();
 </script>
+
 </body>
 </html>
